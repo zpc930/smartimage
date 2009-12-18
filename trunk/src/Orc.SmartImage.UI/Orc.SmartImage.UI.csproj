@@ -164,9 +164,9 @@
       <Project>{F86CF18F-70F4-4491-9C1C-9F390A09E978}</Project>
       <Name>Orc.SmartImage.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orc.SmartImage\Orc.SmartImage.AForgeAdapter.csproj">
+    <ProjectReference Include="..\Orc.SmartImage.Processor\Orc.SmartImage.Processor.csproj">
       <Project>{5DE1F324-1B8D-43C7-8876-1AEC4CBDD3EE}</Project>
-      <Name>Orc.SmartImage.AForgeAdapter</Name>
+      <Name>Orc.SmartImage.Processor</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
