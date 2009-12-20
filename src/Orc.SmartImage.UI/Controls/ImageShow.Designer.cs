@@ -57,6 +57,7 @@
             this.btnCopy.TabIndex = 1;
             this.btnCopy.Text = "复制";
             this.btnCopy.UseVisualStyleBackColor = true;
+            this.btnCopy.Visible = false;
             this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
             // 
             // btnSave
