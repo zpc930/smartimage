@@ -11,7 +11,7 @@ namespace Orc.SmartImage.Processor
 	/// <summary>
 	/// 对图像灰度化
 	/// </summary>
-	[Processor(Category = "常用", Name = "Rgb2Gray处理器", Introduce = "Rgb2Gray处理器")]
+    [Processor(Category = "常用", Name = "图像灰度化处理器", Introduce = "图像灰度化处理器")]
 	public class Rgb2GrayProcessor :BaseProcessor, IProcessor
 	{
 		protected Grayscale m_filter;

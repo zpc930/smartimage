@@ -113,6 +113,7 @@
             // 
             // btnOpenRight
             // 
+            this.btnOpenRight.Enabled = false;
             this.btnOpenRight.Location = new System.Drawing.Point(352, 288);
             this.btnOpenRight.Name = "btnOpenRight";
             this.btnOpenRight.Size = new System.Drawing.Size(24, 23);
@@ -122,6 +123,7 @@
             // 
             // btnOpenLeft
             // 
+            this.btnOpenLeft.Enabled = false;
             this.btnOpenLeft.Location = new System.Drawing.Point(312, 288);
             this.btnOpenLeft.Name = "btnOpenLeft";
             this.btnOpenLeft.Size = new System.Drawing.Size(24, 23);
