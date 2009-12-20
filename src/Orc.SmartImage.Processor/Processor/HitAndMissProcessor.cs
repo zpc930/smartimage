@@ -8,7 +8,7 @@ using AForge.Imaging.Filters;
 
 namespace Orc.SmartImage.Processor
 {
-	[Processor(Category = "形态学处理器", Name = "Hit and Miss处理器", Introduce = "Hit and Miss处理器")]
+	[Processor(Category = "形态学", Name = "Hit and Miss处理器", Introduce = "Hit and Miss处理器")]
 	public class HitAndMissProcessor : BaseProcessor, IProcessor
 	{
 		protected HitAndMiss m_filter = new HitAndMiss(new short[,] {
