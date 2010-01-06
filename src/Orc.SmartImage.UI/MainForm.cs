@@ -498,5 +498,34 @@ namespace Orc.SmartImage.UI
             Image img = this.boxInput.Image;
             Util.ShowImage(img);
         }
+
+        private void btnOpenLeft_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnOpenRight_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private List<FileInfo> GetImages()
+        {
+            List<FileInfo> list = new List<string>();
+            if (String.IsNullOrEmpty(this.tbInputFilePath.Text) == false)
+            {
+                FileInfo fi = new FileInfo(this.tbInputFilePath.Text);
+                if (fi.Exists == true)
+                {
+                    DirectoryInfo di = fi.Directory;
+                    foreach (var item in di.GetFiles())
+                    {
+                        if(item.Name.ToCharArray
+                    }
+                }
+            }
+            return list;
+
+        }
 	}
 }

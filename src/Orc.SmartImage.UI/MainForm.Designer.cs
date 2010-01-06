@@ -113,23 +113,23 @@
             // 
             // btnOpenRight
             // 
-            this.btnOpenRight.Enabled = false;
             this.btnOpenRight.Location = new System.Drawing.Point(352, 288);
             this.btnOpenRight.Name = "btnOpenRight";
             this.btnOpenRight.Size = new System.Drawing.Size(24, 23);
             this.btnOpenRight.TabIndex = 3;
             this.btnOpenRight.Text = "&>";
             this.btnOpenRight.UseVisualStyleBackColor = true;
+            this.btnOpenRight.Click += new System.EventHandler(this.btnOpenRight_Click);
             // 
             // btnOpenLeft
             // 
-            this.btnOpenLeft.Enabled = false;
             this.btnOpenLeft.Location = new System.Drawing.Point(312, 288);
             this.btnOpenLeft.Name = "btnOpenLeft";
             this.btnOpenLeft.Size = new System.Drawing.Size(24, 23);
             this.btnOpenLeft.TabIndex = 3;
             this.btnOpenLeft.Text = "&<";
             this.btnOpenLeft.UseVisualStyleBackColor = true;
+            this.btnOpenLeft.Click += new System.EventHandler(this.btnOpenLeft_Click);
             // 
             // btnOpen
             // 
