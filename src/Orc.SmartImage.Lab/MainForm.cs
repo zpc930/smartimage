@@ -21,12 +21,12 @@ namespace Orc.SmartImage.Lab
 
 		private void InitProcessors()
 		{
-			ProcessorManager.Add(typeof(CannyEdgeDetectProcessor));
-			ProcessorManager.Add(typeof(HitAndMissProcessor));
-			ProcessorManager.Add(typeof(Rgb2GrayProcessor));
-			ProcessorManager.Add(typeof(SimpleHoughLineProcessor));
-			ProcessorManager.Add(typeof(CornersMarkerProcessor));
-			ProcessorManager.Add(typeof(MedianFilter));
+            //ProcessorManager.Add(typeof(CannyEdgeDetectProcessor));
+            //ProcessorManager.Add(typeof(HitAndMissProcessor));
+            //ProcessorManager.Add(typeof(Rgb2GrayProcessor));
+            //ProcessorManager.Add(typeof(SimpleHoughLineProcessor));
+            //ProcessorManager.Add(typeof(CornersMarkerProcessor));
+            //ProcessorManager.Add(typeof(MedianFilter));
 		}
 	}
 }

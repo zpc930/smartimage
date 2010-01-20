@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 using System.Drawing;
+using Emgu.CV;
 
 namespace Orc.SmartImage
 {
 	public class BaseProcessor : IProcessor
 	{
 		protected List<IResult> m_cacheResults;
-		protected Bitmap m_inputImage;
-		protected Bitmap m_outputImage;
+        protected IImage m_inputImage;
+        protected IImage m_outputImage;
 
 		public BaseProcessor()
 		{
@@ -44,7 +45,7 @@ namespace Orc.SmartImage
 				}
 		}
 
-		public Bitmap Handle(Bitmap src)
+        public IImage Handle(IImage src)
 		{
 			m_cacheResults.Clear();
 			if (src == null) return null;
@@ -81,7 +82,7 @@ namespace Orc.SmartImage
 
 		#endregion
 
-		protected virtual Bitmap HandleCore(Bitmap src)
+        protected virtual IImage HandleCore(IImage src)
 		{
 			return src;
 		}

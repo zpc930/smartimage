@@ -1,0 +1,19 @@
+(1) OpenCV (http://sourceforge.net/projects/opencvlibrary/  ;    http://opencv.willowgarage.com/wiki/)
+OpenCV is released under a BSD license, it is free for both academic and commercial use. 
+Example applications of the OpenCV library are Human-Computer Interaction (HCI); Object Identification, Segmentation and Recognition; Face Recognition; Gesture Recognition; Camera and Motion Tracking, Ego Motion, Motion Understanding; Structure From Motion (SFM); Stereo and Multi-Camera Calibration and Depth Computation; Mobile Robotics.
+
+(2) Emgu CV (http://www.emgu.com/)
+Emgu CV is a cross platform .Net wrapper to the Intel OpenCV image processing library. Allowing OpenCV functions to be called from .NET compatible languages such as C#, VB, VC++, IronPython etc. The wrapper can be compiled in Mono and run on Linux / Mac OS X. 
+
+Emgu CV use a Dual License business model for its software development library and offers licenses for two distinct purposes - open source and commercial development 
+
+If you wish to use the open source license of an EMGU product, you must contribute all your source code to the open source community and you must give them the right to share it with everyone too. 
+If you derive a commercial advantage by having a closed source solution, you must purchase an appropriate commercial licenses from EMGU. By purchasing commercial license, you are no longer obligated to publish your source code.  
+
+(3) ffmpeg (http://ffmpeg.org/)
+FFmpeg is a complete, cross-platform solution to record, convert and stream audio and video. It includes libavcodec - the leading audio/video codec library. 
+FFmpeg is free software and is licensed under the LGPL or GPL depending on your choice of configuration options. If you use FFmpeg or its constituent libraries, you must adhere to the terms of the license in question. If you do not, we will track down your project and list it in our Hall of Shame. To see how easy it is to comply, take a look at our license and legal considerations page. 
+
+(4) FFmpeg.NET (http://ffmpegdotnet.codeplex.com/)
+A .NET wrapper for the FFMPEG library, designed to be easy to use and as complete as possible!
+License: Microsoft Permissive License (Ms-PL) v1.1 

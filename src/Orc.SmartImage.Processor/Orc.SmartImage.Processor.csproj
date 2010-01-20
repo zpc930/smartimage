@@ -32,65 +32,13 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AForge, Version=2.0.0.0, Culture=neutral, PublicKeyToken=c1db6ff4eaa06aeb, processorArchitecture=MSIL">
+    <Reference Include="Emgu.CV, Version=2.0.1.0, Culture=neutral, PublicKeyToken=7281126722ab4438, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\AForge.dll</HintPath>
+      <HintPath>..\..\lib\Emgu.CV.dll</HintPath>
     </Reference>
-    <Reference Include="AForge.Controls, Version=2.0.0.0, Culture=neutral, PublicKeyToken=a8ac264d1dc6b9d9, processorArchitecture=MSIL">
+    <Reference Include="Emgu.Util, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7281126722ab4438, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\AForge.Controls.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Fuzzy, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cb12670d0eae17c9, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\AForge.Fuzzy.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Genetic, Version=2.0.0.0, Culture=neutral, PublicKeyToken=4336634eeb41b69b, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\AForge.Genetic.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Imaging, Version=2.0.0.0, Culture=neutral, PublicKeyToken=ba8ddea9676ca48b, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\AForge.Imaging.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Imaging.Formats, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8065ed5a639199a0, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\AForge.Imaging.Formats.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.MachineLearning, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b3f1bdd78212f4e4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\AForge.MachineLearning.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Math, Version=2.0.0.0, Culture=neutral, PublicKeyToken=abba2e25397ee8c9, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\AForge.Math.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Neuro, Version=2.0.0.0, Culture=neutral, PublicKeyToken=2094f4ea39731d4f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\AForge.Neuro.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Robotics.Lego, Version=2.0.0.0, Culture=neutral, PublicKeyToken=5f361631ec856b74, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\AForge.Robotics.Lego.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Robotics.TeRK, Version=2.0.0.0, Culture=neutral, PublicKeyToken=5c0f140128226168, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\AForge.Robotics.TeRK.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Video, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cbfb6e07d173c401, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\AForge.Video.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Video.DirectShow, Version=2.0.0.0, Culture=neutral, PublicKeyToken=61ea4348d43881b7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\AForge.Video.DirectShow.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Video.VFW, Version=2.0.0.0, Culture=neutral, PublicKeyToken=a82f807c999637c8, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\AForge.Video.VFW.dll</HintPath>
-    </Reference>
-    <Reference Include="Orc.Util, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Orc.Util.dll</HintPath>
+      <HintPath>..\..\lib\Emgu.Util.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -103,7 +51,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClassHelper\AForgeClassHelper.cs" />
     <Compile Include="Processor\CannyEdgeDetectProcessor.cs" />
     <Compile Include="Processor\CornersMarkerProcessor.cs" />
     <Compile Include="Processor\HitAndMissProcessor.cs" />
@@ -113,10 +60,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Orc\src\Orc.Util.WinForm\Orc.Util.WinForm.csproj">
-      <Project>{EFB08EB4-709F-4F70-B644-BF7D99662FBB}</Project>
-      <Name>Orc.Util.WinForm</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Orc.SmartImage.Common\Orc.SmartImage.Common.csproj">
       <Project>{F86CF18F-70F4-4491-9C1C-9F390A09E978}</Project>
       <Name>Orc.SmartImage.Common</Name>

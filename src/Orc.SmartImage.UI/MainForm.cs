@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Orc.SmartImage;
 using Orc.Util;
 using Orc.Util.WinForm;
+using Emgu.CV;
 
 namespace Orc.SmartImage.UI
 {
@@ -302,13 +303,13 @@ namespace Orc.SmartImage.UI
 
 		private void imageProcessorWorker_DoWork(object sender, DoWorkEventArgs e)
 		{
-			Bitmap map = m_inputBitmap;
+			IImage map = m_inputBitmap.ToIImage();
 			foreach (var handler in this.Processors)
 			{
                 if (handler.Undamaged == true)
                     map = handler.Handle(map);
                 else
-                    map = handler.Handle(map.Clone(new Rectangle(0, 0, map.Width, map.Height), map.PixelFormat));
+                    map = handler.Handle(map.Clone() as IImage);
 			}
 		}
 
@@ -511,19 +512,19 @@ namespace Orc.SmartImage.UI
 
         private List<FileInfo> GetImages()
         {
-            List<FileInfo> list = new List<string>();
-            if (String.IsNullOrEmpty(this.tbInputFilePath.Text) == false)
-            {
-                FileInfo fi = new FileInfo(this.tbInputFilePath.Text);
-                if (fi.Exists == true)
-                {
-                    DirectoryInfo di = fi.Directory;
-                    foreach (var item in di.GetFiles())
-                    {
-                        if(item.Name.ToCharArray
-                    }
-                }
-            }
+            List<FileInfo> list = new List<FileInfo>();
+            //if (String.IsNullOrEmpty(this.tbInputFilePath.Text) == false)
+            //{
+            //    FileInfo fi = new FileInfo(this.tbInputFilePath.Text);
+            //    if (fi.Exists == true)
+            //    {
+            //        DirectoryInfo di = fi.Directory;
+            //        foreach (var item in di.GetFiles())
+            //        {
+            //            if(item.Name.ToCharArray
+            //        }
+            //    }
+            //}
             return list;
 
         }
