@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
+using Emgu.CV;
 
 namespace Orc.SmartImage
 {
@@ -24,7 +25,7 @@ namespace Orc.SmartImage
 		///		处理完毕的图像。
 		///		如果 Undamaged 为true，则在原图像上进行处理；如果 Undamaged 为false，则只读原图像的数据，处理得到一副新图像。
 		/// </returns>
-		Bitmap Handle(Bitmap src);
+        IImage Handle(IImage src);
 
 		List<IResult> RequestResults();
 	}

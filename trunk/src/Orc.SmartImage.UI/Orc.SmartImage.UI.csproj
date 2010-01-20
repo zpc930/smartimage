@@ -33,18 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AForge, Version=2.0.0.0, Culture=neutral, PublicKeyToken=c1db6ff4eaa06aeb, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\AForge.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Controls, Version=2.0.0.0, Culture=neutral, PublicKeyToken=a8ac264d1dc6b9d9, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\AForge.Controls.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Video, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cbfb6e07d173c401, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\AForge.Video.dll</HintPath>
-    </Reference>
     <Reference Include="Emgu.CV, Version=2.0.1.0, Culture=neutral, PublicKeyToken=7281126722ab4438, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Emgu.CV.dll</HintPath>
@@ -57,6 +45,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Emgu.Util.dll</HintPath>
     </Reference>
+    <Reference Include="Orc.Util, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Orc.Util.dll</HintPath>
+    </Reference>
+    <Reference Include="Orc.Util.WinForm, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Orc.Util.WinForm.dll</HintPath>
+    </Reference>
     <Reference Include="protobuf-net, Version=1.0.0.249, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\protobuf-net.dll</HintPath>
@@ -64,6 +60,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\..\lib\System.Core.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -71,15 +68,13 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="ZedGraph, Version=5.1.5.28844, Culture=neutral, PublicKeyToken=02a83cbd123fcd60, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\ZedGraph.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Context.cs" />
-    <Compile Include="Controls\HistogramShow.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\HistogramShow.Designer.cs">
-      <DependentUpon>HistogramShow.cs</DependentUpon>
-    </Compile>
     <Compile Include="Controls\ImageShow.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -112,9 +107,6 @@
       <DependentUpon>ProcessorSelectForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Controls\HistogramShow.resx">
-      <DependentUpon>HistogramShow.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Controls\ImageShow.resx">
       <DependentUpon>ImageShow.cs</DependentUpon>
     </EmbeddedResource>
@@ -152,14 +144,6 @@
     <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Orc\src\Orc.Util.WinForm\Orc.Util.WinForm.csproj">
-      <Project>{EFB08EB4-709F-4F70-B644-BF7D99662FBB}</Project>
-      <Name>Orc.Util.WinForm</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Orc\src\Orc.Util\Orc.Util.csproj">
-      <Project>{9771C724-359F-46FE-8FD0-7896353537AF}</Project>
-      <Name>Orc.Util</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Orc.SmartImage.Common\Orc.SmartImage.Common.csproj">
       <Project>{F86CF18F-70F4-4491-9C1C-9F390A09E978}</Project>
       <Name>Orc.SmartImage.Common</Name>

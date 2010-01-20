@@ -15,7 +15,6 @@ namespace Orc.SmartImage.UI.Controls
 			InitializeComponent();
 			this.AddControl(new ImageShow());
 			this.AddControl(new TextShow());
-			this.AddControl(new HistogramShow());
 		}
 
 		private void ResultShow_Load(object sender, EventArgs e)

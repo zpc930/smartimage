@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using Emgu.CV;
 
 namespace Orc.SmartImage
 {
@@ -16,7 +17,7 @@ namespace Orc.SmartImage
 		public String Name { get; set; }
 		public Object Result { get; set; }
 
-		public static ProcessorResult CreateInput(IProcessor pro, Bitmap src)
+        public static ProcessorResult CreateInput(IProcessor pro, IImage src)
 		{
 			ProcessorResult r = new ProcessorResult();
 			r.Result = src;
@@ -24,7 +25,7 @@ namespace Orc.SmartImage
 			return r;
 		}
 
-		public static ProcessorResult CreateOutput(IProcessor pro, Bitmap output)
+        public static ProcessorResult CreateOutput(IProcessor pro, IImage output)
 		{
 			ProcessorResult r = new ProcessorResult();
 			r.Result = output;
@@ -43,12 +44,12 @@ namespace Orc.SmartImage
 
 	public static class ProcessorResultClassHelper
 	{
-		public static ProcessorResult CreateInput(this IProcessor pro, Bitmap src)
+        public static ProcessorResult CreateInput(this IProcessor pro, IImage src)
 		{
 			return ProcessorResult.CreateInput(pro, src);
 		}
 
-		public static ProcessorResult CreateOutput(this IProcessor pro, Bitmap output)
+        public static ProcessorResult CreateOutput(this IProcessor pro, IImage output)
 		{
 			return ProcessorResult.CreateOutput(pro, output);
 		}

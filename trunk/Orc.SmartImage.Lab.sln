@@ -7,13 +7,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orc.SmartImage.Lab", "src\O
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orc.SmartImage.Common", "src\Orc.SmartImage.Common\Orc.SmartImage.Common.csproj", "{F86CF18F-70F4-4491-9C1C-9F390A09E978}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orc.Util", "..\Orc\src\Orc.Util\Orc.Util.csproj", "{9771C724-359F-46FE-8FD0-7896353537AF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orc.Util.WinForm", "..\Orc\src\Orc.Util.WinForm\Orc.Util.WinForm.csproj", "{EFB08EB4-709F-4F70-B644-BF7D99662FBB}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Link", "Link", "{3C2B8EAF-D1CA-4724-BE4B-2F4E154A35DE}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orc.SmartImage.Processor", "src\Orc.SmartImage.Processor\Orc.SmartImage.Processor.csproj", "{5DE1F324-1B8D-43C7-8876-1AEC4CBDD3EE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FFB9DC51-7411-45F3-92DB-FC3CABB07D4F}"
+	ProjectSection(SolutionItems) = preProject
+		license.txt = license.txt
+		ref-license.txt = ref-license.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,14 +33,6 @@ Global
 		{F86CF18F-70F4-4491-9C1C-9F390A09E978}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F86CF18F-70F4-4491-9C1C-9F390A09E978}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F86CF18F-70F4-4491-9C1C-9F390A09E978}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9771C724-359F-46FE-8FD0-7896353537AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9771C724-359F-46FE-8FD0-7896353537AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9771C724-359F-46FE-8FD0-7896353537AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9771C724-359F-46FE-8FD0-7896353537AF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EFB08EB4-709F-4F70-B644-BF7D99662FBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EFB08EB4-709F-4F70-B644-BF7D99662FBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EFB08EB4-709F-4F70-B644-BF7D99662FBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EFB08EB4-709F-4F70-B644-BF7D99662FBB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5DE1F324-1B8D-43C7-8876-1AEC4CBDD3EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5DE1F324-1B8D-43C7-8876-1AEC4CBDD3EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5DE1F324-1B8D-43C7-8876-1AEC4CBDD3EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -48,9 +40,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{EFB08EB4-709F-4F70-B644-BF7D99662FBB} = {3C2B8EAF-D1CA-4724-BE4B-2F4E154A35DE}
-		{9771C724-359F-46FE-8FD0-7896353537AF} = {3C2B8EAF-D1CA-4724-BE4B-2F4E154A35DE}
 	EndGlobalSection
 EndGlobal
