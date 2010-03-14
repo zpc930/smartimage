@@ -59,6 +59,12 @@ namespace Orc.SmartImage
             set { *(Start + index) = value; }
         }
 
+        public unsafe Argb32 this[int row, int col]
+        {
+            get { return *(Start + row * Width + col); }
+            set { *(Start + row * Width + col) = value; }
+        }
+
         protected override IColorConverter GetColorConvert()
         {
             return new Argb32Converter();
