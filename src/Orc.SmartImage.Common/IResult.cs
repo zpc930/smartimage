@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
-using Emgu.CV;
 
 namespace Orc.SmartImage
 {
