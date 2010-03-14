@@ -163,33 +163,30 @@ namespace Orc.SmartImage
             Int32 step = SizeOfT();
             Byte* t = (Byte*)StartIntPtr;
 
-            using (map)
+            BitmapData data = map.LockBits(new Rectangle(0, 0, map.Width, map.Height), ImageLockMode.ReadWrite, map.PixelFormat);
+            try
             {
-                BitmapData data = map.LockBits(new Rectangle(0, 0, map.Width, map.Height), ImageLockMode.ReadWrite, map.PixelFormat);
-                try
+                int width = map.Width;
+                int height = map.Height;
+
+
+                Byte* line = (Byte*)data.Scan0;
+
+                for (int h = 0; h < map.Height; h++)
                 {
-                    int width = map.Width;
-                    int height = map.Height;
-
-
-                    Byte* line = (Byte*)data.Scan0;
-
-                    for (int h = 0; h < map.Height; h++)
+                    Argb32* c = (Argb32*)line;
+                    for (int w = 0; w < map.Width; w++)
                     {
-                        Argb32* c = (Argb32*)line;
-                        for (int w = 0; w < map.Width; w++)
-                        {
-                            convert.Copy(t, c);
-                            t += step;
-                            c++;
-                        }
-                        line += data.Stride;
+                        convert.Copy(t, c);
+                        t += step;
+                        c++;
                     }
+                    line += data.Stride;
                 }
-                finally
-                {
-                    map.UnlockBits(data);
-                }
+            }
+            finally
+            {
+                map.UnlockBits(data);
             }
         }
     }
