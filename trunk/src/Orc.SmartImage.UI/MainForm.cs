@@ -303,14 +303,14 @@ namespace Orc.SmartImage.UI
 
 		private void imageProcessorWorker_DoWork(object sender, DoWorkEventArgs e)
 		{
-			IImage map = m_inputBitmap.ToIImage();
-			foreach (var handler in this.Processors)
-			{
-                if (handler.Undamaged == true)
-                    map = handler.Handle(map);
-                else
-                    map = handler.Handle(map.Clone() as IImage);
-			}
+            //IImage map = m_inputBitmap.ToIImage();
+            //foreach (var handler in this.Processors)
+            //{
+            //    if (handler.Undamaged == true)
+            //        map = handler.Handle(map);
+            //    else
+            //        map = handler.Handle(map.Clone() as IImage);
+            //}
 		}
 
 		private void imageProcessorWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
