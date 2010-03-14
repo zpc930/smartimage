@@ -33,14 +33,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Emgu.CV, Version=2.0.1.0, Culture=neutral, PublicKeyToken=7281126722ab4438, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Emgu.CV.dll</HintPath>
-    </Reference>
-    <Reference Include="Emgu.Util, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7281126722ab4438, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Emgu.Util.dll</HintPath>
-    </Reference>
     <Reference Include="Orc.Util, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Orc.Util.dll</HintPath>
@@ -55,9 +47,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseProcessor.cs" />
-    <Compile Include="BitmapHelper.cs" />
+    <Compile Include="UnmanagedImage\ColorConverter.cs" />
     <Compile Include="ConvolutionKernel.cs" />
-    <Compile Include="ImageChannel.cs" />
+    <Compile Include="IColor.cs" />
+    <Compile Include="IImage.cs" />
     <Compile Include="ImageClassHelper.cs" />
     <Compile Include="IProcessor.cs" />
     <Compile Include="IResult.cs" />
@@ -65,6 +58,11 @@
     <Compile Include="ProcessorManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Range.cs" />
+    <Compile Include="UnmanagedImage\Argb32Image.cs" />
+    <Compile Include="UnmanagedImage\GrayscaleImage.cs" />
+    <Compile Include="UnmanagedImage\Rgb24Image.cs" />
+    <Compile Include="UnmanagedImage\ImageU8.cs" />
+    <Compile Include="UnmanagedImage\UnmanagedImage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
