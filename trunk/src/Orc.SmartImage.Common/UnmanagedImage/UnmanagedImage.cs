@@ -234,8 +234,6 @@ namespace Orc.SmartImage
 
         protected abstract IByteConverter<T> CreateByteConverter();
 
-
-
         #region IEnumerable<T> Members
 
         public IEnumerator<T> GetEnumerator()
