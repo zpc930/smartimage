@@ -19,10 +19,8 @@ namespace Orc.SmartImage
         }
     }
 
-    public struct Argb32Converter : IColorConverter
+    public struct Argb32Converter : IByteConverter<Argb32>
     {
-        #region IColorConvert Members
-
         public unsafe void Copy(byte* from, Argb32* to)
         {
             *to = *((Argb32*)from);
@@ -42,7 +40,21 @@ namespace Orc.SmartImage
             c->Alpha = 255;
         }
 
-        #endregion
+        public unsafe void Copy(byte* from, ref Argb32 to)
+        {
+            to.Blue = from[0];
+            to.Green = from[1];
+            to.Blue = from[2];
+            to.Alpha = from[3];
+        }
+
+        public unsafe void Copy(ref Argb32 from, byte* to)
+        {
+            to[0] = from.Blue;
+            to[1] = from.Green;
+            to[2] = from.Red;
+            to[3] = from.Alpha;
+        }
     }
 
     public class Argb32Image : UnmanagedImage<Argb32>
@@ -58,23 +70,10 @@ namespace Orc.SmartImage
         {
         }
 
-        public unsafe Argb32 this[int index]
-        {
-            get { return *(Start + index); }
-            set { *(Start + index) = value; }
-        }
-
-        public unsafe Argb32 this[int row, int col]
-        {
-            get { return *(Start + row * Width + col); }
-            set { *(Start + row * Width + col) = value; }
-        }
-
-        protected override IColorConverter GetColorConvert()
+        protected override IByteConverter<Argb32> CreateByteConverter()
         {
             return new Argb32Converter();
         }
-
 
         public GrayscaleImage ToGrayscaleImage()
         {
@@ -99,9 +98,9 @@ namespace Orc.SmartImage
             }
             else
             {
-                int* rCache = stackalloc int[256];
-                int* gCache = stackalloc int[256];
                 int* bCache = stackalloc int[256];
+                int* gCache = stackalloc int[256];
+                int* rCache = stackalloc int[256];
 
                 const int shift = 1 << 10;
                 int rShift = (int)(rCoeff * shift);
@@ -111,17 +110,17 @@ namespace Orc.SmartImage
                 int r = 0, g = 0, b = 0;
                 for (int i = 0; i < 256; i++)
                 {
-                    rCache[i] = r;
-                    gCache[i] = g;
                     bCache[i] = b;
-                    r += rShift;
-                    g += gShift;
+                    gCache[i] = g;
+                    rCache[i] = r;
                     b += bShift;
+                    g += gShift;
+                    r += rShift;
                 }
 
                 while (p != end)
                 {
-                    *to = (Byte)((rCache[p->Red] + gCache[p->Green] + bCache[p->Red]) >> 10);
+                    *to = (Byte)((bCache[p->Red] + gCache[p->Green] + rCache[p->Red]) >> 10);
                     p++;
                     to++;
                 }

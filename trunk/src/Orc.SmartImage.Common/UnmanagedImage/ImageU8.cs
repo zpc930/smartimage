@@ -5,10 +5,8 @@ using System.Drawing;
 
 namespace Orc.SmartImage
 {
-    public struct ByteConverter : IColorConverter
+    public struct ByteConverter : IByteConverter<Byte>
     {
-        #region IColorConvert Members
-
         public unsafe void Copy(byte* from, Argb32* to)
         {
             Byte data = *from;
@@ -28,7 +26,15 @@ namespace Orc.SmartImage
             *to = (Byte)(from->Blue * 0.114 + from->Green * 0.587 + from->Red * 0.299);
         }
 
-        #endregion
+        public unsafe void Copy(byte* from, ref byte to)
+        {
+            to = *from;
+        }
+
+        public unsafe void Copy(ref byte from, byte* to)
+        {
+            *to = from;
+        }
     }
 
     public class ImageU8 : UnmanagedImage<Byte>
@@ -45,15 +51,7 @@ namespace Orc.SmartImage
         {
         }
 
-        public unsafe Byte this[int index]
-        {
-            get { return *(Start + index); }
-            set {
-                *(Start + index) = value; 
-            }
-        }
-
-        protected override IColorConverter GetColorConvert()
+        protected override IByteConverter<Byte> CreateByteConverter()
         {
             return new ByteConverter();
         }
