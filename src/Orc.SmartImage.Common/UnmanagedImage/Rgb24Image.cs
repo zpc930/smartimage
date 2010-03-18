@@ -7,9 +7,14 @@ namespace Orc.SmartImage
 {
     public struct Rgb24
     {
-        public Byte Red;
-        public Byte Green;
         public Byte Blue;
+        public Byte Green;
+        public Byte Red;
+
+        public override string ToString()
+        {
+            return "Rgb24 [R=" + Red.ToString() + ", G=" + Green.ToString() + ", B=" + Blue.ToString() + "]";
+        }
     }
 
     public struct Rgb24Converter : IColorConverter
@@ -18,24 +23,24 @@ namespace Orc.SmartImage
 
         public unsafe void Copy(byte* from, Argb32* to)
         {
+            to->Blue = from[0];
+            to->Green = from[1];
+            to->Red = from[2];
             to->Alpha = 255;
-            to->Red = from[0];
-            to->Green = from[2];
-            to->Blue = from[3];
         }
 
         public unsafe void Copy(Argb32* from, byte* to)
         {
-            to[0] = from->Red;
+            to[0] = from->Blue;
             to[1] = from->Green;
-            to[2] = from->Blue;
+            to[2] = from->Red;
         }
 
         public unsafe void Copy(Rgb24* from, byte* to)
         {
-            to[0] = from->Red;
+            to[0] = from->Blue;
             to[1] = from->Green;
-            to[2] = from->Blue;
+            to[2] = from->Red;
         }
 
         #endregion
@@ -59,6 +64,12 @@ namespace Orc.SmartImage
         {
             get { return *(Start + index); }
             set { *(Start + index) = value; }
+        }
+
+        public unsafe Rgb24 this[int row, int col]
+        {
+            get { return *(Start + row * Width + col); }
+            set { *(Start + row * Width + col) = value; }
         }
 
         protected override IColorConverter GetColorConvert()

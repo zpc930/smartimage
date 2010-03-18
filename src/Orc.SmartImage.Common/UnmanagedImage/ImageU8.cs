@@ -12,20 +12,20 @@ namespace Orc.SmartImage
         public unsafe void Copy(byte* from, Argb32* to)
         {
             Byte data = *from;
-            to->Alpha = 255;
-            to->Red = data;
-            to->Green = data;
             to->Blue = data;
+            to->Green = data;
+            to->Red = data;
+            to->Alpha = 255;
         }
 
         public unsafe void Copy(Argb32* from, byte* to)
         {
-            *to = (Byte)(from->Red * 0.299 + from->Green * 0.587 + from->Blue * 0.114);
+            *to = (Byte)(from->Blue * 0.114 + from->Green * 0.587 + from->Red * 0.299);
         }
 
         public unsafe void Copy(Rgb24* from, byte* to)
         {
-            *to = (Byte)(from->Red * 0.299 + from->Green * 0.587 + from->Blue * 0.114);
+            *to = (Byte)(from->Blue * 0.114 + from->Green * 0.587 + from->Red * 0.299);
         }
 
         #endregion
