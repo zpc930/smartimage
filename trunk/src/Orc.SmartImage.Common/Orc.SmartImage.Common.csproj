@@ -49,7 +49,6 @@
     <Compile Include="BaseProcessor.cs" />
     <Compile Include="UnmanagedImage\ColorConverter.cs" />
     <Compile Include="ConvolutionKernel.cs" />
-    <Compile Include="IColor.cs" />
     <Compile Include="IImage.cs" />
     <Compile Include="ImageClassHelper.cs" />
     <Compile Include="IProcessor.cs" />

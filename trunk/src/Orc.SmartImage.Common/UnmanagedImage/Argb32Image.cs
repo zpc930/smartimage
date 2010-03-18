@@ -8,10 +8,15 @@ namespace Orc.SmartImage
 {
     public struct Argb32
     {
-        public Byte Alpha;
-        public Byte Red;
-        public Byte Green;
         public Byte Blue;
+        public Byte Green;
+        public Byte Red;
+        public Byte Alpha;
+
+        public override string ToString()
+        {
+            return "Argb32 [A="+ Alpha +", R=" + Red.ToString() + ", G=" + Green.ToString() + ", B=" + Blue.ToString() + "]";
+        }
     }
 
     public struct Argb32Converter : IColorConverter
@@ -31,10 +36,10 @@ namespace Orc.SmartImage
         public unsafe void Copy(Rgb24* from, byte* to)
         {
             Argb32* c = (Argb32*)to;
-            c->Alpha = 255;
-            c->Red = from->Red;
-            c->Green = from->Green;
             c->Blue = from->Blue;
+            c->Green = from->Green;
+            c->Red = from->Red;
+            c->Alpha = 255;
         }
 
         #endregion

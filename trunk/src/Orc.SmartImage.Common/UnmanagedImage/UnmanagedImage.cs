@@ -159,6 +159,8 @@ namespace Orc.SmartImage
                 throw new ArgumentException("只支持 Format32bppArgb 格式。 ");
             }
 
+            // map.InitGrayscalePalette();
+
             IColorConverter convert = GetColorConvert();
             Int32 step = SizeOfT();
             Byte* t = (Byte*)StartIntPtr;
@@ -172,10 +174,10 @@ namespace Orc.SmartImage
 
                 Byte* line = (Byte*)data.Scan0;
 
-                for (int h = 0; h < map.Height; h++)
+                for (int h = 0; h < height; h++)
                 {
                     Argb32* c = (Argb32*)line;
-                    for (int w = 0; w < map.Width; w++)
+                    for (int w = 0; w < width; w++)
                     {
                         convert.Copy(t, c);
                         t += step;
