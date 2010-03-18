@@ -9,34 +9,29 @@ namespace Orc.SmartImageLab.PerformanceTest
 {
     public class TestLoadImageAndConvert
     {
-        public static Rgb24Image LoadRgb24Image(Bitmap map)
-        {
-            return new Rgb24Image(map);
-        }
-
-        public static GrayscaleImage ConvertRgb24ToGrayscale(Rgb24Image img)
-        {
-            return img.ToGrayscaleImage();
-        }
-
-        public static Bitmap ConvertGrayscaleToBitmap(GrayscaleImage img)
-        {
-            return img.ToBitmap();
-        }
-
         public static void Test(String imgName, String filePath)
         {
             using(Bitmap map = new Bitmap(filePath))
             {
+                int count = 0;
                 Rgb24Image rgb24 = null;
                 GrayscaleImage gray = null;
                 Bitmap to = null;
                 CodeTimer.Time("LoadRgb24Image-" + imgName, 1, () => { rgb24 = new Rgb24Image(map); });
                 CodeTimer.Time("ConvertRgb24ToGrayscale-" + imgName, 1, () => { gray = rgb24.ToGrayscaleImage(); });
                 CodeTimer.Time("ConvertGrayscaleToBitmap-" + imgName, 1, () => { to = gray.ToBitmap(); });
+                CodeTimer.Time("ImageEnumerator-" + imgName, 1, () => 
+                {
+                    foreach (Rgb24 r in rgb24)
+                    {
+                        count++;
+                    }
+                });
+
+                Console.WriteLine(count);
                 
-                Save(to, filePath + "_grayscale.bmp");
-                Save(rgb24.ToBitmap(), filePath + "_rgb24.bmp");
+                Save(to, filePath + "_grayscale.png");
+                Save(rgb24.ToBitmap(), filePath + "_rgb24.png");
                 rgb24.Dispose();
                 gray.Dispose();
                 to.Dispose();
@@ -46,7 +41,7 @@ namespace Orc.SmartImageLab.PerformanceTest
         private static void Save(Bitmap map, String filePath)
         {
             if (File.Exists(filePath)) File.Delete(filePath);
-            map.Save(filePath, System.Drawing.Imaging.ImageFormat.Bmp);
+            map.Save(filePath, System.Drawing.Imaging.ImageFormat.Png);
         }
 
         public static void Test()
