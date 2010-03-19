@@ -24,6 +24,8 @@ namespace Orc.SmartImage
 
         public unsafe UnmanagedImage(Int32 width, Int32 height)
         {
+            if (width <= 0) throw new ArgumentOutOfRangeException("width");
+            else if (height <= 0) throw new ArgumentOutOfRangeException("height");
             Width = width;
             Height = height;
             Length = Width * Height;
@@ -179,6 +181,10 @@ namespace Orc.SmartImage
             finally
             {
                 newMap.UnlockBits(data);
+                if (newMap != map)
+                {
+                    newMap.Dispose();
+                }
             }
         }
 
