@@ -47,7 +47,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseProcessor.cs" />
-    <Compile Include="UnmanagedImage\ColorConverter.cs" />
+    <Compile Include="UnmanagedImage\ImageU8FilterHelper.cs" />
+    <Compile Include="UnmanagedImage\FilterKernel.cs" />
+    <Compile Include="UnmanagedImage\FilterHelper_Template.cs" />
+    <Compile Include="UnmanagedImage\IByteConverter.cs" />
     <Compile Include="ConvolutionKernel.cs" />
     <Compile Include="IImage.cs" />
     <Compile Include="ImageClassHelper.cs" />
@@ -59,6 +62,7 @@
     <Compile Include="Range.cs" />
     <Compile Include="UnmanagedImage\Argb32Image.cs" />
     <Compile Include="UnmanagedImage\GrayscaleImage.cs" />
+    <Compile Include="UnmanagedImage\ImageU8FilterHelper_Csmacro.cs" />
     <Compile Include="UnmanagedImage\Rgb24Image.cs" />
     <Compile Include="UnmanagedImage\ImageU8.cs" />
     <Compile Include="UnmanagedImage\UnmanagedImage.cs" />
@@ -71,4 +75,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PreBuildEvent>Csmacro.exe $(ProjectDir)</PreBuildEvent>
+  </PropertyGroup>
 </Project>
