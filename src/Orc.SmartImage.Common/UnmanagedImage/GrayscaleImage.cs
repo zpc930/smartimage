@@ -16,6 +16,5 @@ namespace Orc.SmartImage
             : base(map)
         {
         }
-
     }
 }
