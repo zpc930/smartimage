@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orc.SmartImage.CommonTest",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orc.SmartImageLab.PerformanceTest", "src\Orc.SmartImageLab.PerformanceTest\Orc.SmartImageLab.PerformanceTest.csproj", "{4ACBC4C7-CE49-4EB5-BFF3-801F524DC358}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orc.SmartImage.AForgeProcessor", "src\Orc.SmartImage.AForgeProcessor\Orc.SmartImage.AForgeProcessor.csproj", "{8FC778D2-BFE5-4CF5-8184-96A9E45045B0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,10 @@ Global
 		{4ACBC4C7-CE49-4EB5-BFF3-801F524DC358}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4ACBC4C7-CE49-4EB5-BFF3-801F524DC358}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4ACBC4C7-CE49-4EB5-BFF3-801F524DC358}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FC778D2-BFE5-4CF5-8184-96A9E45045B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FC778D2-BFE5-4CF5-8184-96A9E45045B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FC778D2-BFE5-4CF5-8184-96A9E45045B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FC778D2-BFE5-4CF5-8184-96A9E45045B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

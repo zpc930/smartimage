@@ -37,7 +37,7 @@ namespace Orc.SmartImage
         }
     }
 
-    public class ImageU8 : UnmanagedImage<Byte>
+    public partial class ImageU8 : UnmanagedImage<Byte>
     {
         public unsafe Byte* Start { get { return (Byte*)this.StartIntPtr; } }
 
@@ -56,5 +56,11 @@ namespace Orc.SmartImage
             return new ByteConverter();
         }
 
+        public override IImage Clone()
+        {
+            ImageU8 img = new ImageU8(this.Width, this.Height);
+            img.CloneFrom(this);
+            return img;
+        }
     }
 }

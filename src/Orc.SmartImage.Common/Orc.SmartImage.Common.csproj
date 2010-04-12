@@ -47,9 +47,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseProcessor.cs" />
-    <Compile Include="UnmanagedImage\ImageU8FilterHelper.cs" />
+    <Compile Include="BitmapWrapper.cs" />
+    <Compile Include="UnmanagedImage\ImageArgb32ClassHelper.cs" />
+    <Compile Include="UnmanagedImage\ImageArgb32ClassHelper_Csmacro.cs" />
+    <Compile Include="UnmanagedImage\ImageU8ClassHelper.cs" />
     <Compile Include="UnmanagedImage\FilterKernel.cs" />
-    <Compile Include="UnmanagedImage\FilterHelper_Template.cs" />
+    <Compile Include="UnmanagedImage\ImageClassHelper_Template.cs" />
     <Compile Include="UnmanagedImage\IByteConverter.cs" />
     <Compile Include="ConvolutionKernel.cs" />
     <Compile Include="IImage.cs" />
@@ -60,11 +63,12 @@
     <Compile Include="ProcessorManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Range.cs" />
-    <Compile Include="UnmanagedImage\Argb32Image.cs" />
-    <Compile Include="UnmanagedImage\GrayscaleImage.cs" />
-    <Compile Include="UnmanagedImage\ImageU8FilterHelper_Csmacro.cs" />
-    <Compile Include="UnmanagedImage\Rgb24Image.cs" />
+    <Compile Include="UnmanagedImage\ImageArgb32.cs" />
+    <Compile Include="UnmanagedImage\ImageU8ClassHelper_Csmacro.cs" />
+    <Compile Include="UnmanagedImage\ImageRgb24.cs" />
     <Compile Include="UnmanagedImage\ImageU8.cs" />
+    <Compile Include="UnmanagedImage\ImageRgb24ClassHelper.cs" />
+    <Compile Include="UnmanagedImage\ImageRgb24ClassHelper_Csmacro.cs" />
     <Compile Include="UnmanagedImage\UnmanagedImage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

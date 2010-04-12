@@ -4,13 +4,14 @@ using System.Text;
 
 namespace Orc.SmartImage
 {
-    using TPixel = System.Byte;
+    using TPixel = Argb32;
     using TCache = System.Int32;
     using TKernel = System.Int32;
 
-    public static partial class ImageU8FilterHelper
+    public static partial class ImageArgb32ClassHelper
     {
-        #region include "FilterHelper_Template.cs"
+        #region include "ImageClassHelper_Template.cs"
         #endregion
     }
 }
+

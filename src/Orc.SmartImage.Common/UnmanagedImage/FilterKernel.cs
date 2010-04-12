@@ -15,16 +15,14 @@ namespace Orc.SmartImage
 
         public FilterKernel(T[] data, Int32 width, Int32 height, Int32 scale)
         {
+            if (data == null) throw new ArgumentNullException("data");
+            if (height < 1) throw new ArgumentOutOfRangeException("height");
+            if (width < 1) throw new ArgumentOutOfRangeException("width");
+
             this.Width = width;
             this.Height = height;
             this.Scale = scale;
             this.Data = data;
         }
-    }
-
-    public struct T
-    {
-        public unsafe T* t;
-        public unsafe T** t1;
     }
 }
