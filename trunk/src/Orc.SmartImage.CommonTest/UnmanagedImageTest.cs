@@ -17,7 +17,7 @@ namespace Orc.SmartImage.CommonTest
             Bitmap map = new Bitmap(imgPath0);
             Color c = map.GetPixel(0, 0);
             Console.WriteLine(c.ToString());
-            Rgb24Image r = new Rgb24Image(map);
+            ImageRgb24 r = new ImageRgb24(map);
             Rgb24 cr = r[0, 0];
             Console.WriteLine(cr.ToString());
             Bitmap to = r.ToBitmap();
@@ -39,7 +39,7 @@ namespace Orc.SmartImage.CommonTest
             Bitmap map = new Bitmap(imgPath0);
             Color c = map.GetPixel(0, 0);
             Console.WriteLine(c.ToString());
-            Argb32Image r = new Argb32Image(map);
+            ImageArgb32 r = new ImageArgb32(map);
             Argb32 cr = r[0, 0];
             Console.WriteLine(cr.ToString());
             Bitmap to = r.ToBitmap();

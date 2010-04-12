@@ -15,6 +15,11 @@ namespace Orc.SmartImage
         {
             return "Rgb24 [R=" + Red.ToString() + ", G=" + Green.ToString() + ", B=" + Blue.ToString() + "]";
         }
+
+        public Byte ToGray()
+        {
+            return (Byte)(0.299 * Red + 0.587 * Green + 0.114 * Blue);
+        }
     }
 
     public struct Rgb24Converter : IByteConverter<Rgb24>
@@ -57,16 +62,16 @@ namespace Orc.SmartImage
         }
     }
 
-    public class Rgb24Image : UnmanagedImage<Rgb24>
+    public partial class ImageRgb24 : UnmanagedImage<Rgb24>
     {
         public unsafe Rgb24* Start { get { return (Rgb24*)this.StartIntPtr; } }
 
-        public unsafe Rgb24Image(Int32 width, Int32 height)
+        public unsafe ImageRgb24(Int32 width, Int32 height)
             : base(width, height)
         {
         }
 
-        public Rgb24Image(Bitmap map)
+        public ImageRgb24(Bitmap map)
             : base(map)
         {
         }
@@ -76,14 +81,14 @@ namespace Orc.SmartImage
             return new Rgb24Converter();
         }
 
-        public GrayscaleImage ToGrayscaleImage()
+        public ImageU8 ToGrayscaleImage()
         {
             return ToGrayscaleImage(0.299, 0.587, 0.114);
         }
 
-        public unsafe GrayscaleImage ToGrayscaleImage(double rCoeff, double gCoeff, double bCoeff)
+        public unsafe ImageU8 ToGrayscaleImage(double rCoeff, double gCoeff, double bCoeff)
         {
-            GrayscaleImage img = new GrayscaleImage(this.Width, this.Height);
+            ImageU8 img = new ImageU8(this.Width, this.Height);
             Rgb24* p = Start;
             Byte* to = img.Start;
             Rgb24* end = p + Length;
@@ -126,6 +131,13 @@ namespace Orc.SmartImage
                     to++;
                 }
             }
+            return img;
+        }
+
+        public override IImage Clone()
+        {
+            ImageRgb24 img = new ImageRgb24(this.Width, this.Height);
+            img.CloneFrom(this);
             return img;
         }
     }

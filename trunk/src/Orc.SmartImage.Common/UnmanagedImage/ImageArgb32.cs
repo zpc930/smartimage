@@ -57,16 +57,16 @@ namespace Orc.SmartImage
         }
     }
 
-    public class Argb32Image : UnmanagedImage<Argb32>
+    public class ImageArgb32 : UnmanagedImage<Argb32>
     {
         public unsafe Argb32* Start { get { return (Argb32*)this.StartIntPtr; } }
 
-        public unsafe Argb32Image(Int32 width, Int32 height)
+        public unsafe ImageArgb32(Int32 width, Int32 height)
             : base(width, height)
         {
         }
 
-        public Argb32Image(Bitmap map):base(map)
+        public ImageArgb32(Bitmap map):base(map)
         {
         }
 
@@ -75,14 +75,14 @@ namespace Orc.SmartImage
             return new Argb32Converter();
         }
 
-        public GrayscaleImage ToGrayscaleImage()
+        public ImageU8 ToGrayscaleImage()
         {
             return ToGrayscaleImage(0.299, 0.587, 0.114);
         }
 
-        public unsafe GrayscaleImage ToGrayscaleImage(double rCoeff, double gCoeff, double bCoeff)
+        public unsafe ImageU8 ToGrayscaleImage(double rCoeff, double gCoeff, double bCoeff)
         {
-            GrayscaleImage img = new GrayscaleImage(this.Width, this.Height);
+            ImageU8 img = new ImageU8(this.Width, this.Height);
             Argb32* p = Start;
             Byte* to = img.Start;
             Argb32* end = p + Length;
@@ -125,6 +125,13 @@ namespace Orc.SmartImage
                     to++;
                 }
             }
+            return img;
+        }
+
+        public override IImage Clone()
+        {
+            ImageArgb32 img = new ImageArgb32(this.Width, this.Height);
+            img.CloneFrom(this);
             return img;
         }
     }

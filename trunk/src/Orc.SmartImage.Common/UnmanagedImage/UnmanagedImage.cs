@@ -7,7 +7,7 @@ using System.Drawing.Imaging;
 
 namespace Orc.SmartImage
 {
-    public abstract class UnmanagedImage<T> : IDisposable, IEnumerable<T>
+    public abstract class UnmanagedImage<T> : IDisposable, IImage
         where T : struct
     {
         public Int32 ByteCount { get; private set; }
@@ -40,6 +40,24 @@ namespace Orc.SmartImage
         {
             if (map == null) throw new ArgumentNullException("map");
             this.CreateFromBitmap(map);
+        }
+
+        public unsafe void CloneFrom(UnmanagedImage<T> src)
+        {
+            if(src == null) throw new ArgumentNullException("src");
+            if(src.ByteCount != this.ByteCount) throw new NotSupportedException("与src图像的像素数量不一致，无法复制.");
+
+            Byte* start = m_start;
+            Byte* end = m_start + ByteCount;
+
+            Byte* from = src.m_start;
+
+            while (start != end)
+            {
+                *start = *from;
+                ++start;
+                ++from;
+            }
         }
 
         /// <summary>
@@ -238,87 +256,8 @@ namespace Orc.SmartImage
             }
         }
 
+        public abstract IImage Clone();
+
         protected abstract IByteConverter<T> CreateByteConverter();
-
-        #region IEnumerable<T> Members
-
-        public IEnumerator<T> GetEnumerator()
-        {
-            return new ImageEnum<T>(this, this.m_converter);
-        }
-
-        #endregion
-
-        #region IEnumerable Members
-
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        #endregion
-    }
-
-    internal class ImageEnum<T> : IEnumerator<T>
-        where T : struct
-    {
-        private UnmanagedImage<T> m_img;
-        private unsafe Byte* m_start;
-        private Int32 m_step;
-        private unsafe Byte* m_end;
-        private unsafe Byte* m_current;
-        private IByteConverter<T> m_converter;
-
-        public unsafe ImageEnum(UnmanagedImage<T> img, IByteConverter<T> converter)
-        {
-            m_img = img;
-            m_start = (Byte*)m_img.StartIntPtr;
-            m_step = m_img.SizeOfType;
-            m_end = m_start + m_step * m_img.Length;
-            m_current = m_start;
-            m_converter = converter;
-        }
-
-        #region IEnumerator<T> Members
-
-        public unsafe T Current
-        {
-            get 
-            { 
-                T t = new T();
-                m_converter.Copy(m_current, ref t); 
-                return t; 
-            }
-        }
-
-        #endregion
-
-        #region IDisposable Members
-
-        public void Dispose()
-        {
-        }
-
-        #endregion
-
-        #region IEnumerator Members
-
-        object System.Collections.IEnumerator.Current
-        {
-            get { return Current; }
-        }
-
-        public unsafe bool MoveNext()
-        {
-            m_current += this.m_step;
-            return m_current < m_end;
-        }
-
-        public unsafe void Reset()
-        {
-            m_current = m_start;
-        }
-
-        #endregion
     }
 }

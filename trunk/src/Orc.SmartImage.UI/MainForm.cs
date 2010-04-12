@@ -31,7 +31,9 @@ namespace Orc.SmartImage.UI
 			this.Processors = new BindingList<IProcessor>();
 			this.Results = new BindingList<IResult>();
 			InitializeComponent();
+            
 			Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
+            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 			this.dgvProcessors.UseDefaultMode00();
 			this.dgvProcessors.AutoGenerateColumns = false;
 			this.dgvOutputs.UseDefaultMode00();
@@ -39,6 +41,13 @@ namespace Orc.SmartImage.UI
 			BindProcessors();
 			BindOutputs();
 		}
+
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            Exception innerException = e.ExceptionObject as Exception;
+            if(innerException !=null)
+                MessageBox.Show(innerException.Message);
+        }
 
 		public void HideProcessorCommandButtons()
 		{
@@ -277,9 +286,14 @@ namespace Orc.SmartImage.UI
 			this.m_handleSuspending = false;
 		}
 
+        protected virtual Bitmap GetInputImage()
+        {
+            return this.boxInput.Image as Bitmap;
+        }
+
 		private void btnRun_Click(object sender, EventArgs e)
 		{
-			Bitmap map = this.boxInput.Image as Bitmap;
+            Bitmap map = GetInputImage();
 			if (map == null)
 			{
 				MessageBox.Show("没有输入图像");
@@ -303,14 +317,14 @@ namespace Orc.SmartImage.UI
 
 		private void imageProcessorWorker_DoWork(object sender, DoWorkEventArgs e)
 		{
-            //IImage map = m_inputBitmap.ToIImage();
-            //foreach (var handler in this.Processors)
-            //{
-            //    if (handler.Undamaged == true)
-            //        map = handler.Handle(map);
-            //    else
-            //        map = handler.Handle(map.Clone() as IImage);
-            //}
+            IImage map = new BitmapWrapper(m_inputBitmap);
+            foreach (var handler in this.Processors)
+            {
+                if (handler.Undamaged == true)
+                    map = handler.Handle(map);
+                else
+                    map = handler.Handle(map.Clone());
+            }
 		}
 
 		private void imageProcessorWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -329,6 +343,7 @@ namespace Orc.SmartImage.UI
 			ClearDgvOutput();
 			List<IProcessor> list = this.dgvProcessors.GetSelectedItems<IProcessor>();
 			List<IResult> results = null;
+            this.Results.Clear();
 
 			if (list != null && list.Count > 0)
 			{
