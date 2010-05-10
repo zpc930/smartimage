@@ -37,7 +37,7 @@ namespace Orc.SmartImage
             {
                 for (Int32 w = 0; w < width; w++)
                 {
-                    handler(r, w, p);
+                    handler(w, r, p);
                     p++;
                 }
             }
