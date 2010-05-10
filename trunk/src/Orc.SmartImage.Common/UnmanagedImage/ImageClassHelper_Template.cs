@@ -37,7 +37,7 @@ namespace Orc.SmartImage.Hidden
             {
                 for (Int32 w = 0; w < width; w++)
                 {
-                    handler(r, w, p);
+                    handler(w, r, p);
                     p++;
                 }
             }
@@ -102,7 +102,6 @@ namespace Orc.SmartImage.Hidden
         #endregion
     }
 }
-
 
 //// 本算法是错误的，只为说明C#模板程序的使用。
 //        public unsafe static UnmanagedImage<TPixel> Filter(this UnmanagedImage<TPixel> src, FilterKernel<TKernel> filter)
