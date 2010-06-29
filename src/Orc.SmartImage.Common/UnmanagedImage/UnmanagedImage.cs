@@ -26,7 +26,6 @@ namespace Orc.SmartImage
         {
             if (width <= 0) throw new ArgumentOutOfRangeException("width");
             else if (height <= 0) throw new ArgumentOutOfRangeException("height");
-            Width = width;
             Height = height;
             Length = Width * Height;
             SizeOfType = SizeOfT();
