@@ -9,7 +9,7 @@ namespace Orc.SmartImageLab.PerformanceTest
     {
         public static void Main()
         {
-            TestLoadImageAndConvert.Test();
+            UnmanagedImageTest.Test();
 
             Console.WriteLine("Test Finished. Press any key to exit.");
             Console.ReadKey();
