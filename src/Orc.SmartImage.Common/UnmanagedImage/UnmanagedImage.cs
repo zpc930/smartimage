@@ -27,6 +27,7 @@ namespace Orc.SmartImage
             if (width <= 0) throw new ArgumentOutOfRangeException("width");
             else if (height <= 0) throw new ArgumentOutOfRangeException("height");
             Height = height;
+            Width = width;
             Length = Width * Height;
             SizeOfType = SizeOfT();
             ByteCount = SizeOfType * Length;
@@ -234,10 +235,48 @@ namespace Orc.SmartImage
                 int width = map.Width;
                 int height = map.Height;
 
-
                 Byte* line = (Byte*)data.Scan0;
 
                 for (int h = 0; h < height; h++)
+                {
+                    Argb32* c = (Argb32*)line;
+                    for (int w = 0; w < width; w++)
+                    {
+                        m_converter.Copy(t, c);
+                        t += step;
+                        c++;
+                    }
+                    line += data.Stride;
+                }
+            }
+            finally
+            {
+                map.UnlockBits(data);
+            }
+        }
+
+        public unsafe void ToBitmapEx(Bitmap map)
+        {
+            if (map == null) throw new ArgumentNullException("map");
+            if (map.Width != this.Width || map.Height != this.Height)
+            {
+                throw new ArgumentException("尺寸不匹配.");
+            }
+
+            if (map.PixelFormat != PixelFormat.Format32bppArgb)
+            {
+                throw new ArgumentException("只支持 Format32bppArgb 格式。 ");
+            }
+
+            Int32 step = SizeOfT();
+            Byte* t = (Byte*)StartIntPtr;
+
+            BitmapData data = map.LockBits(new Rectangle(0, 0, map.Width, map.Height), ImageLockMode.ReadWrite, map.PixelFormat);
+            try
+            {
+                Byte* line = (Byte*)data.Scan0;
+                int width = map.Width;
+                for (int h = 0; h < map.Height; h++)
                 {
                     Argb32* c = (Argb32*)line;
                     for (int w = 0; w < width; w++)
