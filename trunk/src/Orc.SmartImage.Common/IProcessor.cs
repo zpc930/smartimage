@@ -10,6 +10,8 @@ namespace Orc.SmartImage
 		String Name { get; }
 		Boolean Enable { get; set; }
 
+        Boolean DisableTempResult { get; set; }
+
 		/// <summary>
 		/// 值为 true 表明本图像处理是在原图像自身进行处理，处理后的结果写入原图像
 		/// 值为 false 表明只读原图像，进行处理，处理后的结果写入新图像
