@@ -19,7 +19,7 @@ namespace Orc.SmartImage
         public static ProcessorResult CreateInput(IProcessor pro, IImage src)
 		{
 			ProcessorResult r = new ProcessorResult();
-			r.Result = src;
+			r.Result = src == null ? null : src.ToBitmap();
 			r.Name = "输入图像";
 			return r;
 		}
@@ -27,7 +27,7 @@ namespace Orc.SmartImage
         public static ProcessorResult CreateOutput(IProcessor pro, IImage output)
 		{
 			ProcessorResult r = new ProcessorResult();
-			r.Result = output;
+            r.Result = output == null ? null : output.ToBitmap();
 			r.Name = "输出图像";
 			return r;
 		}

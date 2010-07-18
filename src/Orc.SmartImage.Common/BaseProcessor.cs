@@ -12,6 +12,8 @@ namespace Orc.SmartImage
         protected IImage m_inputImage;
         protected IImage m_outputImage;
 
+        public Boolean DisableTempResult { get; set; }
+
 		public BaseProcessor()
 		{
 			Enable = true;

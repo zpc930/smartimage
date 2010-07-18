@@ -53,6 +53,7 @@
     <Compile Include="CodeTimer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestAdd.cs" />
     <Compile Include="TestLoadImageAndConvert.cs" />
     <Compile Include="UnmanagedImageTest.cs" />
   </ItemGroup>
