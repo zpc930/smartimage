@@ -13,7 +13,7 @@ namespace Orc.SmartImage.Hidden
         #region mixin
 
         public unsafe delegate void ActionOnPixel(TPixel* p);
-        public unsafe delegate void ActionOnPosition(Int32 row, Int32 column, TPixel* p);
+        public unsafe delegate void ActionWithPosition(Int32 row, Int32 column, TPixel* p);
         public unsafe delegate Boolean PredicateOnPixel(TPixel* p);
 
         public unsafe static void ForEach(this UnmanagedImage<TPixel> src, ActionOnPixel handler)
@@ -27,7 +27,7 @@ namespace Orc.SmartImage.Hidden
             }
         }
 
-        public unsafe static void ForEach(this UnmanagedImage<TPixel> src, ActionOnPosition handler)
+        public unsafe static void ForEach(this UnmanagedImage<TPixel> src, ActionWithPosition handler)
         {
             Int32 width = src.Width;
             Int32 height = src.Height;
@@ -40,6 +40,16 @@ namespace Orc.SmartImage.Hidden
                     handler(w, r, p);
                     p++;
                 }
+            }
+        }
+
+        public unsafe static void ForEach(this UnmanagedImage<TPixel> src, TPixel* start, uint length, ActionOnPixel handler)
+        {
+            TPixel* end = start + src.Length;
+            while (start != end)
+            {
+                handler(start);
+                ++start;
             }
         }
 
@@ -99,54 +109,47 @@ namespace Orc.SmartImage.Hidden
             return list;
         }
 
+        /// <summary>
+        /// 查找模板。模板中值代表实际像素值。负数代表任何像素。返回查找得到的像素的左上端点的位置。
+        /// </summary>
+        /// <param name="template"></param>
+        /// <returns></returns>
+        public static unsafe List<System.Drawing.Point> FindTemplate(this UnmanagedImage<TPixel> src, int[,] template)
+        {
+            List<System.Drawing.Point> finds = new List<System.Drawing.Point>();
+            int tHeight = template.GetUpperBound(0) + 1;
+            int tWidth = template.GetUpperBound(1) + 1;
+            int toWidth = src.Width - tWidth + 1;
+            int toHeight = src.Height - tHeight + 1;
+            int stride = src.Width;
+            TPixel* start = (TPixel*)src.StartIntPtr;
+            for (int r = 0; r < toHeight; r++)
+            {
+                for (int c = 0; c < toWidth; c++)
+                {
+                    TPixel* srcStart = start + r * stride + c;
+                    for (int rr = 0; rr < tHeight; rr++)
+                    {
+                        for (int cc = 0; cc < tWidth; cc++)
+                        {
+                            int pattern = template[rr, cc];
+                            if (pattern >= 0 && srcStart[rr * stride + cc] != pattern)
+                            {
+                                goto Next;
+                            }
+                        }
+                    }
+
+                    finds.Add(new System.Drawing.Point(c, r));
+
+                Next:
+                    continue;
+                }
+            }
+
+            return finds;
+        }
+
         #endregion
     }
 }
-
-//// 本算法是错误的，只为说明C#模板程序的使用。
-//        public unsafe static UnmanagedImage<TPixel> Filter(this UnmanagedImage<TPixel> src, FilterKernel<TKernel> filter)
-//        {
-//            TKernel* kernel = stackalloc TKernel[filter.Length];
-
-//            Int32 srcWidth = src.Width;
-//            Int32 srcHeight = src.Height;
-//            Int32 kWidth = filter.Width;
-//            Int32 kHeight = filter.Height;
-
-//            TPixel* start = (TPixel*)src.StartIntPtr;
-//            TPixel* lineStart = start;
-//            TPixel* pStart = start;
-//            TPixel* pTemStart = pStart;
-//            TPixel* pT;
-//            TKernel* pK;
-
-//            for (int c = 0; c < srcWidth; c++)
-//            {
-//                for (int r = 0; r < srcHeight; r++)
-//                {
-//                    pTemStart = pStart;
-//                    pK = kernel;
-
-//                    Int32 val = 0;
-//                    for (int kc = 0; kc < kWidth; kc++)
-//                    {
-//                        pT = pStart;
-//                        for (int kr = 0; kr < kHeight; kr++)
-//                        {
-//                            val += *pK * *pT;
-//                            pT++;
-//                            pK++;
-//                        }
-
-//                        pStart += srcWidth;
-//                    }
-
-//                    pStart = pTemStart;
-//                    pStart++;
-//                }
-
-//                lineStart += srcWidth;
-//                pStart = lineStart;
-//            }
-//            return null;
-//        }

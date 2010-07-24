@@ -6,7 +6,7 @@ using System.Drawing.Imaging;
 
 namespace Orc.SmartImage
 {
-    public struct Argb32
+    public partial struct Argb32
     {
         public Byte Blue;
         public Byte Green;
@@ -57,10 +57,8 @@ namespace Orc.SmartImage
         }
     }
 
-    public class ImageArgb32 : UnmanagedImage<Argb32>
+    public partial class ImageArgb32 : UnmanagedImage<Argb32>
     {
-        public unsafe Argb32* Start { get { return (Argb32*)this.StartIntPtr; } }
-
         public unsafe ImageArgb32(Int32 width, Int32 height)
             : base(width, height)
         {

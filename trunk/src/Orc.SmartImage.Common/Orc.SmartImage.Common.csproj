@@ -94,6 +94,8 @@
     <Compile Include="UnmanagedImage\ImageU8.cs" />
     <Compile Include="UnmanagedImage\ImageRgb24ClassHelper.cs" />
     <Compile Include="UnmanagedImage\ImageRgb24ClassHelper_Csmacro.cs" />
+    <Compile Include="UnmanagedImage\Image_Template.cs" />
+    <Compile Include="UnmanagedImage\TPixel_Template.cs" />
     <Compile Include="UnmanagedImage\UnmanagedImage.cs" />
   </ItemGroup>
   <ItemGroup>

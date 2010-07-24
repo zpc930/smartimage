@@ -13,7 +13,7 @@ namespace Orc.SmartImage
         
 
         public unsafe delegate void ActionOnPixel(TPixel* p);
-        public unsafe delegate void ActionOnPosition(Int32 row, Int32 column, TPixel* p);
+        public unsafe delegate void ActionWithPosition(Int32 row, Int32 column, TPixel* p);
         public unsafe delegate Boolean PredicateOnPixel(TPixel* p);
 
         public unsafe static void ForEach(this UnmanagedImage<TPixel> src, ActionOnPixel handler)
@@ -27,7 +27,7 @@ namespace Orc.SmartImage
             }
         }
 
-        public unsafe static void ForEach(this UnmanagedImage<TPixel> src, ActionOnPosition handler)
+        public unsafe static void ForEach(this UnmanagedImage<TPixel> src, ActionWithPosition handler)
         {
             Int32 width = src.Width;
             Int32 height = src.Height;
@@ -40,6 +40,16 @@ namespace Orc.SmartImage
                     handler(w, r, p);
                     p++;
                 }
+            }
+        }
+
+        public unsafe static void ForEach(this UnmanagedImage<TPixel> src, TPixel* start, uint length, ActionOnPixel handler)
+        {
+            TPixel* end = start + src.Length;
+            while (start != end)
+            {
+                handler(start);
+                ++start;
             }
         }
 
@@ -97,6 +107,123 @@ namespace Orc.SmartImage
             }
 
             return list;
+        }
+
+        /// <summary>
+        /// 查找模板。模板中值代表实际像素值。负数代表任何像素。返回查找得到的像素的左上端点的位置。
+        /// </summary>
+        /// <param name="template"></param>
+        /// <returns></returns>
+        public static unsafe List<System.Drawing.Point> FindTemplate(this UnmanagedImage<TPixel> src, int[,] template)
+        {
+            List<System.Drawing.Point> finds = new List<System.Drawing.Point>();
+            int tHeight = template.GetUpperBound(0) + 1;
+            int tWidth = template.GetUpperBound(1) + 1;
+            int toWidth = src.Width - tWidth + 1;
+            int toHeight = src.Height - tHeight + 1;
+            int stride = src.Width;
+            TPixel* start = (TPixel*)src.StartIntPtr;
+            for (int r = 0; r < toHeight; r++)
+            {
+                for (int c = 0; c < toWidth; c++)
+                {
+                    TPixel* srcStart = start + r * stride + c;
+                    for (int rr = 0; rr < tHeight; rr++)
+                    {
+                        for (int cc = 0; cc < tWidth; cc++)
+                        {
+                            int pattern = template[rr, cc];
+                            if (pattern >= 0 && srcStart[rr * stride + cc] != pattern)
+                            {
+                                goto Next;
+                            }
+                        }
+                    }
+
+                    finds.Add(new System.Drawing.Point(c, r));
+
+                Next:
+                    continue;
+                }
+            }
+
+            return finds;
+        }
+
+        
+    }
+
+    public partial class ImageRgb24
+    {
+        
+
+        public unsafe TPixel* Start { get { return (TPixel*)this.StartIntPtr; } }
+
+        public unsafe TPixel this[int index]
+        {
+            get
+            {
+                return Start[index];
+            }
+            set
+            {
+                Start[index] = value;
+            }
+        }
+
+        public unsafe TPixel this[int row, int col]
+        {
+            get
+            {
+                return Start[row * this.Width + col];
+            }
+            set
+            {
+                Start[row * this.Width + col] = value;
+            }
+        }
+
+        public unsafe TPixel* Row(Int32 row)
+        {
+            if (row < 0 || row >= this.Height) throw new ArgumentOutOfRangeException("row");
+            return Start + row * this.Width;
+        }
+
+        
+    }
+
+    public partial struct Rgb24
+    {
+        
+
+        public static Boolean operator ==(TPixel lhs, int rhs)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Boolean operator !=(TPixel lhs, int rhs)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Boolean operator ==(TPixel lhs, double rhs)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Boolean operator !=(TPixel lhs, double rhs)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Boolean operator ==(TPixel lhs, float rhs)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Boolean operator !=(TPixel lhs, float rhs)
+        {
+            throw new NotImplementedException();
         }
 
         

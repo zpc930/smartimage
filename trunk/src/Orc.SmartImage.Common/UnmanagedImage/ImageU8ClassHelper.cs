@@ -13,4 +13,13 @@ namespace Orc.SmartImage
         #region include "ImageClassHelper_Template.cs"
         #endregion
     }
+
+    public partial class ImageU8
+    {
+        #region include "Image_Template.cs"
+        #endregion
+    }
 }
+
+
+
