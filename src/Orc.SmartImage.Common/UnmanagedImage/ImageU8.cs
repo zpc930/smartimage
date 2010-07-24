@@ -39,8 +39,6 @@ namespace Orc.SmartImage
 
     public partial class ImageU8 : UnmanagedImage<Byte>
     {
-        public unsafe Byte* Start { get { return (Byte*)this.StartIntPtr; } }
-
         public unsafe ImageU8(Int32 width, Int32 height)
             : base(width, height)
         {
@@ -100,47 +98,6 @@ namespace Orc.SmartImage
             {
                 Start[item] = replacedPixel;
             }
-        }
-
-        /// <summary>
-        /// 查找模板。模板中值代表实际像素值。负数代表任何像素。返回查找得到的像素的左上端点的位置。
-        /// </summary>
-        /// <param name="template"></param>
-        /// <returns></returns>
-        public unsafe List<Point> FindTemplate(Int32[,] template)
-        {
-            List<Point> finds = new List<Point>();
-            int tHeight = template.GetUpperBound(0)+1;
-            int tWidth = template.GetUpperBound(1)+1;
-            int toWidth = this.Width - tWidth + 1;
-            int toHeight = this.Height - tHeight + 1;
-            int stride = this.Width;
-            Byte* start = this.Start;
-            for (int r = 0; r < toHeight; r++)
-            {
-                for (int c = 0; c < toWidth; c++)
-                {
-                    Byte* srcStart = start + r * stride + c;
-                    for (int rr = 0; rr < tHeight; rr++)
-                    {
-                        for (int cc = 0; cc < tWidth; cc++)
-                        {
-                            Int32 pattern = template[rr,cc];
-                            if (pattern >= 0 && pattern != srcStart[rr * stride + cc])
-                            {
-                                goto Next;
-                            }
-                        }
-                    }
-
-                    finds.Add(new Point(c, r));
-
-                Next:
-                    continue;
-                }
-            }
-
-            return finds;
         }
     }
 }

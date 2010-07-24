@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Orc.SmartImage
 {
-    public struct Rgb24
+    public partial struct Rgb24
     {
         public Byte Blue;
         public Byte Green;
@@ -64,8 +64,6 @@ namespace Orc.SmartImage
 
     public partial class ImageRgb24 : UnmanagedImage<Rgb24>
     {
-        public unsafe Rgb24* Start { get { return (Rgb24*)this.StartIntPtr; } }
-
         public unsafe ImageRgb24(Int32 width, Int32 height)
             : base(width, height)
         {

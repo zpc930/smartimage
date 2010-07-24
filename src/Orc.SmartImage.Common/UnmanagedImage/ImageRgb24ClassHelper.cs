@@ -13,4 +13,16 @@ namespace Orc.SmartImage
         #region include "ImageClassHelper_Template.cs"
         #endregion
     }
+
+    public partial class ImageRgb24
+    {
+        #region include "Image_Template.cs"
+        #endregion
+    }
+
+    public partial struct Rgb24
+    {
+        #region include "TPixel_Template.cs"
+        #endregion
+    }
 }
