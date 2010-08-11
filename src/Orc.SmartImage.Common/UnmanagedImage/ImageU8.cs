@@ -152,70 +152,135 @@ namespace Orc.SmartImage
             Byte background = (Byte)(255 - foreground);
             Int32 length = this.Length;
 
-            ImageU8 mask = new ImageU8(this.Width, this.Height);
-            mask.Fill(0);
-
-            Boolean loop = true;
-            while (loop == true)
+            using (ImageU8 mask = new ImageU8(this.Width, this.Height))
             {
-                loop = false;
-                for (Int32 r = 1; r < height - 1; r++)
+                mask.Fill(0);
+
+                Boolean loop = true;
+                while (loop == true)
                 {
-                    for (Int32 w = 1; w < width - 1; w++)
+                    loop = false;
+                    for (Int32 r = 1; r < height - 1; r++)
                     {
-                        Byte* p = start + r * width + w;
-
-                        // 条件1：p 必须是前景点
-                        if (*p != foreground) continue;
-
-                        //  p3  p2  p1
-                        //  p4  p   p0
-                        //  p5  p6  p7
-                        // list 存储的是补集，即前景点为0，背景点为1，以方便联结数的计算
-                        FillNeighbors(p, list, width, foreground);
-
-                        // 条件2：p0,p2,p4,p6 不皆为前景点
-                        if (list[0] == 0 && list[2] == 0 && list[4] == 0 && list[6] == 0)
-                            continue;
-
-                        // 条件3: p0~p7至少两个是前景点
-                        Int32 count = 0;
-                        for (int i = 0; i < 8; i++)
+                        for (Int32 c = 1; c < width - 1; c++)
                         {
-                            count += list[i];
-                        }
-                        
-                        if (count > 6) continue;
+                            Byte* p = start + r * width + c;
 
-                        // 条件4：联结数等于1
-                        if (DetectConnectivity(list) != 1) continue;
+                            // 条件1：p 必须是前景点
+                            if (*p != foreground) continue;
 
-                        // 条件5: 假设p2已标记删除，则令p2为背景，不改变p的联结数
-                        if (mask[r - 1, w] == 1)
-                        {
-                            list[2] = 1;
-                            if (DetectConnectivity(list) != 1)
+                            //  p3  p2  p1
+                            //  p4  p   p0
+                            //  p5  p6  p7
+                            // list 存储的是补集，即前景点为0，背景点为1，以方便联结数的计算
+                            FillNeighbors(p, list, width, foreground);
+
+                            // 条件2：p0,p2,p4,p6 不皆为前景点
+                            if (list[0] == 0 && list[2] == 0 && list[4] == 0 && list[6] == 0)
                                 continue;
-                            list[2] = 0;
-                        }
 
-                        // 条件6: 假设p4已标记删除，则令p4为背景，不改变p的联结数
-                        if (mask[r, w - 1] == 1)
-                        {
-                            list[4] = 1;
-                            if (DetectConnectivity(list) != 1)
-                                continue;
+                            // 条件3: p0~p7至少两个是前景点
+                            Int32 count = 0;
+                            for (int i = 0; i < 8; i++)
+                            {
+                                count += list[i];
+                            }
+
+                            if (count > 6) continue;
+
+                            // 条件4：联结数等于1
+                            if (DetectConnectivity(list) != 1) continue;
+
+                            // 条件5: 假设p2已标记删除，则令p2为背景，不改变p的联结数
+                            if (mask[r - 1, c] == 1)
+                            {
+                                list[2] = 1;
+                                if (DetectConnectivity(list) != 1)
+                                    continue;
+                                list[2] = 0;
+                            }
+
+                            // 条件6: 假设p4已标记删除，则令p4为背景，不改变p的联结数
+                            if (mask[r, c - 1] == 1)
+                            {
+                                list[4] = 1;
+                                if (DetectConnectivity(list) != 1)
+                                    continue;
+                            }
+                            mask[r, c] = 1; // 标记删除
+                            loop = true;
                         }
-                        mask[r, w] = 1; // 标记删除
-                        loop = true;
+                    }
+
+                    for (int i = 0; i < length; i++)
+                    {
+                        if (mask[i] == 1)
+                        {
+                            this[i] = background;
+                        }
+                    }
+                }
+            }
+        }
+
+        public unsafe void SkeletonizeByMidPoint(Byte foreground = 255)
+        {
+            using (ImageU8 mask = new ImageU8(this.Width, this.Height))
+            {
+                mask.Fill(0);
+                Int32 width = this.Width;
+                Int32 height = this.Height;
+                for (Int32 r = 0; r < height; r++)
+                {
+                    Int32 lineStart = -1;
+                    for (Int32 c = 0; c < width; c++)
+                    {
+                        if (this[r, c] == foreground)
+                        {
+                            if (lineStart == -1) lineStart = c;
+                        }
+                        else
+                        {
+                            if (lineStart != -1)
+                            {
+                                mask[r, (lineStart + c) / 2] = 1;
+                                lineStart = -1;
+                            }
+                        }
                     }
                 }
 
+                for (Int32 c = 0; c < width; c++)
+                {
+                    Int32 lineStart = -1;
+                    for (Int32 r = 0; r < height; r++)
+                    {
+                        if (this[r, c] == foreground)
+                        {
+                            if (lineStart == -1) lineStart = r;
+                        }
+                        else
+                        {
+                            if (lineStart != -1)
+                            {
+                                mask[(lineStart + r) / 2, c] = 1;
+                                lineStart = -1;
+                            }
+                        }
+                    }
+                }
+
+                Byte bg = (Byte)(255 - foreground);
+                Int32 length = this.Length;
                 for (int i = 0; i < length; i++)
                 {
                     if (mask[i] == 1)
                     {
-                        this[i] = background;
+                        this[i] = foreground;
+                    }
+                    else
+                    {
+                        this[i] = bg;
                     }
                 }
             }
