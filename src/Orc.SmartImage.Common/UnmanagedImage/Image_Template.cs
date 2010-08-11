@@ -50,6 +50,17 @@ namespace Orc.SmartImage.Hidden
             return Start + row * this.Width;
         }
 
+        public unsafe void Fill(TPixel pixel)
+        {
+            TPixel* p = this.Start;
+            TPixel* end = p + this.Length;
+            while (p != end)
+            {
+                *p = pixel;
+                p++;
+            }
+        }
+
         #endregion
     }
 }

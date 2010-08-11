@@ -73,6 +73,7 @@
     <Compile Include="BaseProcessor.cs" />
     <Compile Include="BitmapWrapper.cs" />
     <Compile Include="IPosition.cs" />
+    <Compile Include="Sampling\ImageSamplingAlgorithm.cs" />
     <Compile Include="UnmanagedImage\ImageArgb32ClassHelper.cs" />
     <Compile Include="UnmanagedImage\ImageArgb32ClassHelper_Csmacro.cs" />
     <Compile Include="UnmanagedImage\ImageU8ClassHelper.cs" />
