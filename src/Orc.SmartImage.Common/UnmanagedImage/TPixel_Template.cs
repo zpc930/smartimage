@@ -38,8 +38,18 @@ namespace Orc.SmartImage.Hidden
             throw new NotImplementedException();
         }
 
-        #endregion
+        public static Boolean operator ==(TPixel lhs, TPixel rhs)
+        {
+            return lhs.Equals(rhs);
+        }
+        
+        public static Boolean operator !=(TPixel lhs, TPixel rhs)
+        {
+            return !lhs.Equals(rhs);
+        }
 
+        #endregion
         */
+
     }
 }
