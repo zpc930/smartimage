@@ -183,6 +183,18 @@ namespace Orc.SmartImage
             }
         }
 
+        public unsafe TPixel this[System.Drawing.Point location]
+        {
+            get
+            {
+                return this[location.Y, location.X];
+            }
+            set
+            {
+                this[location.Y, location.X] = value;
+            }
+        }
+
         public unsafe TPixel* Row(Int32 row)
         {
             if (row < 0 || row >= this.Height) throw new ArgumentOutOfRangeException("row");

@@ -76,6 +76,7 @@
     <Compile Include="Sampling\ImageSamplingAlgorithm.cs" />
     <Compile Include="UnmanagedImage\ImageArgb32ClassHelper.cs" />
     <Compile Include="UnmanagedImage\ImageArgb32ClassHelper_Csmacro.cs" />
+    <Compile Include="UnmanagedImage\ImageLab.cs" />
     <Compile Include="UnmanagedImage\ImageU8ClassHelper.cs" />
     <Compile Include="UnmanagedImage\FilterKernel.cs" />
     <Compile Include="UnmanagedImage\ImageClassHelper_Template.cs" />
