@@ -247,58 +247,19 @@ namespace Orc.SmartImage
             }
         }
 
-        //public unsafe void ApplyConvolution(int[,] kernel, int scale = 1)
-        //{
-        //    int kernelHeight = kernel.GetUpperBound(0) + 1;
-        //    int kernelWidth = kernel.GetUpperBound(1) + 1;
-        //    if (kernelHeight % 2 == 0 || kernelWidth % 2 == 0)
-        //    {
-        //        throw new ArgumentException("kernel 的尺寸必须为奇数，如3*3,5*5.");
-        //    }
-        //    int extend = Math.Max(kernelWidth, kernelHeight) / 2;
-        //    ImageU8 maskImage = new ImageU8(Width + extend * 2, Height + extend * 2);
-        //    maskImage.Fill(0);//这里效率不高。原本只需要填充四周扩大的部分即可
-        //    maskImage.Copy(this, new Point(0, 0), new Rectangle(0, 0, this.Width, this.Height), new Point(extend, extend));
-        //    int width = this.Width;
-        //    int height = this.Height;
-        //    if (scale == 1)
-        //    {
-        //        for (int h = 0; h < height; h++)
-        //        {
-        //            for (int w = 0; w < width; w++)
-        //            {
-        //                int val = 0;
-        //                for (int kw = 0; kw < kernelWidth; kw++)
-        //                {
-        //                    for (int kh = 0; kh < kernelHeight; kh++)
-        //                    {
-        //                        val += maskImage[h + kh, w + kw] * kernel[kh, kw];
-        //                    }
-        //                }
-        //                this[h, w] = (Byte)val;
-        //            }
-        //        }
-        //    }
-        //    else
-        //    {
-        //        double factor = 1.0 / scale;
-        //        for (int h = 0; h < height; h++)
-        //        {
-        //            for (int w = 0; w < width; w++)
-        //            {
-        //                int val = 0;
-        //                for (int kw = 0; kw < kernelWidth; kw++)
-        //                {
-        //                    for (int kh = 0; kh < kernelHeight; kh++)
-        //                    {
-        //                        val += maskImage[h + kh, w + kw] * kernel[kh, kw];
-        //                    }
-        //                }
-        //                this[h, w] = (Byte)(val * factor);
-        //            }
-        //        }
-        //    }
-        //    maskImage.Dispose();
-        //}
+        public unsafe ImageInt32 ToImageInt32()
+        {
+            ImageInt32 img32 = new ImageInt32(this.Width, this.Height);
+            Byte* start = this.Start;
+            Byte* end = this.Start + this.Length;
+            Int32* dst = img32.Start;
+            while (start != end)
+            {
+                *dst = *start;
+                start++;
+                dst++;
+            }
+            return img32;
+        }
     }
 }

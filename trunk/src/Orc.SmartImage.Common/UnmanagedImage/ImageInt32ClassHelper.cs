@@ -7,6 +7,7 @@ namespace Orc.SmartImage
     using TPixel = System.Int32;
     using TCache = System.Int32;
     using TKernel = System.Int32;
+    using TImage = Orc.SmartImage.ImageInt32;
 
     public static partial class ImageInt32ClassHelper
     {
@@ -17,6 +18,9 @@ namespace Orc.SmartImage
     public partial class ImageInt32
     {
         #region include "Image_Template.cs"
+        #endregion
+
+        #region include "ImageFilter_Template.cs"
         #endregion
     }
 }

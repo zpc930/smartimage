@@ -65,5 +65,22 @@ namespace Orc.SmartImage
             img.CloneFrom(this);
             return img;
         }
+
+        public unsafe ImageU8 ToImageU8()
+        {
+            ImageU8 imgU8 = new ImageU8(this.Width, this.Height);
+            int length = imgU8.Length;
+            Int32* start = this.Start;
+            Byte* dst = imgU8.Start;
+            Int32* end = start + this.Length;
+            while (start != end)
+            {
+                int val = *start;
+                *dst = val < 0 ? (Byte)0 : (val > 255 ? (Byte)255 : (Byte)val);
+                start++;
+                dst++;
+            }
+            return imgU8;
+        }
     }
 }

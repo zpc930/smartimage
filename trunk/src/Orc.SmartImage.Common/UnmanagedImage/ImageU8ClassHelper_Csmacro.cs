@@ -276,14 +276,12 @@ namespace Orc.SmartImage
 
         
 
-        public unsafe void ApplyConvolution(int[,] kernel, int scale = 1)
+        public unsafe void ApplyConvolution(ConvolutionKernel  k)
         {
-            int kernelHeight = kernel.GetUpperBound(0) + 1;
-            int kernelWidth = kernel.GetUpperBound(1) + 1;
-            if (kernelHeight % 2 == 0 || kernelWidth % 2 == 0)
-            {
-                throw new ArgumentException("kernel 的尺寸必须为奇数，如3*3,5*5.");
-            }
+            int kernelHeight = k.Width;
+            int kernelWidth = k.Height;
+            int scale = k.Scale;
+            int[,] kernel = k.Kernel;
             int extend = Math.Max(kernelWidth, kernelHeight) / 2;
             TImage maskImage = new TImage(Width + extend * 2, Height + extend * 2);
             maskImage.Fill(0);//这里效率不高。原本只需要填充四周扩大的部分即可
