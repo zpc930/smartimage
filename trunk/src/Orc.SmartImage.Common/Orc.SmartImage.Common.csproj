@@ -78,6 +78,9 @@
     <Compile Include="UnmanagedImage\ImageArgb32ClassHelper_Csmacro.cs" />
     <Compile Include="UnmanagedImage\ImageCibLab.cs" />
     <Compile Include="UnmanagedImage\ImageCibXyz.cs" />
+    <Compile Include="UnmanagedImage\ImageInt32.cs" />
+    <Compile Include="UnmanagedImage\ImageInt32ClassHelper.cs" />
+    <Compile Include="UnmanagedImage\ImageInt32ClassHelper_Csmacro.cs" />
     <Compile Include="UnmanagedImage\ImageLAlphaBeta.cs" />
     <Compile Include="UnmanagedImage\ImageU8ClassHelper.cs" />
     <Compile Include="UnmanagedImage\FilterKernel.cs" />
@@ -99,6 +102,7 @@
     <Compile Include="UnmanagedImage\ImageRgb24ClassHelper.cs" />
     <Compile Include="UnmanagedImage\ImageRgb24ClassHelper_Csmacro.cs" />
     <Compile Include="UnmanagedImage\Image_Template.cs" />
+    <Compile Include="UnmanagedImage\ImageFilter_Template.cs" />
     <Compile Include="UnmanagedImage\TPixel_Template.cs" />
     <Compile Include="UnmanagedImage\UnmanagedImage.cs" />
   </ItemGroup>
