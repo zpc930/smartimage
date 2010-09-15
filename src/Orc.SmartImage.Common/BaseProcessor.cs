@@ -87,5 +87,20 @@ namespace Orc.SmartImage
 		{
 			return src;
 		}
+
+        public void AddTempResult(String title, Bitmap map)
+        {
+            this.m_cacheResults.Add(this.CreateTempResult(title, map));
+        }
+
+        public void AddTempResult(String title, String message)
+        {
+            this.m_cacheResults.Add(this.CreateInfoResult(title, message));
+        }
+
+        public void AddTempResult(String message)
+        {
+            AddTempResult("消息");
+        }
 	}
 }

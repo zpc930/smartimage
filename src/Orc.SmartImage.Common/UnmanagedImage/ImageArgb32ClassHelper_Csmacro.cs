@@ -212,6 +212,20 @@ namespace Orc.SmartImage
             }
         }
 
+        public unsafe void Replace(TPixel pixel, TPixel replaced)
+        {
+            TPixel* p = this.Start;
+            TPixel* end = p + this.Length;
+            while (p != end)
+            {
+                if (*p == pixel)
+                {
+                    *p = replaced;
+                }
+                p++;
+            }
+        }
+
         public unsafe void Copy(UnmanagedImage<TPixel> src, System.Drawing.Point start, System.Drawing.Rectangle region, System.Drawing.Point destAnchor)
         {
             if (start.X >= src.Width || start.Y >= src.Height) return;
