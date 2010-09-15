@@ -61,45 +61,6 @@ namespace Orc.SmartImage
             return img;
         }
 
-        public unsafe void Remove(Byte frontPixel, Byte replacedPixel)
-        {
-            List<Int32> mask = new List<int>(this.Length);
-
-            for (int r = 1; r < this.Height - 1; r++)
-            {
-                for (int c = 1; c < this.Width -1; c++)
-                {
-                    int index = r * this.Width + c;
-                    Byte b00 = Start[(r - 1) * this.Width + c -1 ];
-                    Byte b01 = Start[(r - 1) * this.Width + c];
-                    Byte b02 = Start[(r - 1) * this.Width + c + 1];
-                    Byte b10 = Start[r * this.Width + c -1];
-                    Byte b11 = Start[r * this.Width + c];
-                    Byte b12 = Start[r * this.Width + c + 1];
-                    Byte b20 = Start[(r + 1) * this.Width + c -1];
-                    Byte b21 = Start[(r + 1) * this.Width + c];
-                    Byte b22 = Start[(r + 1) * this.Width + c + 1];
-                    if (b00 == frontPixel
-                        && b01 == frontPixel
-                        && b02 == frontPixel
-                        && b10 == frontPixel
-                        && b11 == frontPixel
-                        && b12 == frontPixel
-                        && b20 == frontPixel
-                        && b21 == frontPixel
-                        && b22 == frontPixel)
-                    {
-                        mask.Add(r * this.Width + c);
-                    }
-                }
-            }
-
-            foreach (var item in mask)
-            {
-                Start[item] = replacedPixel;
-            }
-        }
-
         public unsafe void Invert()
         {
             Byte* p = this.Start;
@@ -288,8 +249,8 @@ namespace Orc.SmartImage
 
         public unsafe void ApplyConvolution(int[,] kernel, int scale = 1)
         {
-            int kernelHeight = kernel.GetUpperBound(0);
-            int kernelWidth = kernel.GetUpperBound(1);
+            int kernelHeight = kernel.GetUpperBound(0) + 1;
+            int kernelWidth = kernel.GetUpperBound(1) + 1;
             if (kernelHeight % 2 == 0 || kernelWidth % 2 == 0)
             {
                 throw new ArgumentException("kernel 的尺寸必须为奇数，如3*3,5*5.");
