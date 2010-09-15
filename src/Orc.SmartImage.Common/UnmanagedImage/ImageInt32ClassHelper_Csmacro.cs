@@ -4,11 +4,11 @@ using System.Text;
 
 namespace Orc.SmartImage
 {
-    using TPixel = Argb32;
+    using TPixel = System.Int32;
     using TCache = System.Int32;
     using TKernel = System.Int32;
 
-    public static partial class ImageArgb32ClassHelper
+    public static partial class ImageInt32ClassHelper
     {
         
 
@@ -153,7 +153,7 @@ namespace Orc.SmartImage
         
     }
 
-    public partial class ImageArgb32
+    public partial class ImageInt32
     {
         
 
@@ -273,52 +273,7 @@ namespace Orc.SmartImage
 
         
     }
-
-    public partial struct Argb32
-    {
-        
-
-        public static Boolean operator ==(TPixel lhs, int rhs)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static Boolean operator !=(TPixel lhs, int rhs)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static Boolean operator ==(TPixel lhs, double rhs)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static Boolean operator !=(TPixel lhs, double rhs)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static Boolean operator ==(TPixel lhs, float rhs)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static Boolean operator !=(TPixel lhs, float rhs)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static Boolean operator ==(TPixel lhs, TPixel rhs)
-        {
-            return lhs.Equals(rhs);
-        }
-        
-        public static Boolean operator !=(TPixel lhs, TPixel rhs)
-        {
-            return !lhs.Equals(rhs);
-        }
-
-        
-    }
 }
+
+
 

@@ -128,7 +128,7 @@ namespace Orc.SmartImage.Hidden
                     pDst++;
                 }
                 srcLine += srcWidth;
-                dstWidth += dstWidth;
+                dstLine += dstWidth;
             }
         }
 
