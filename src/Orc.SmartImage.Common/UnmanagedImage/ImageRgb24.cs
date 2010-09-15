@@ -90,6 +90,11 @@ namespace Orc.SmartImage
             return ToGrayscaleImage(0.299, 0.587, 0.114);
         }
 
+        public ImageInt32 ToGrayscaleImageInt32()
+        {
+            return ToGrayscaleImageInt32(0.299, 0.587, 0.114);
+        }
+
         public unsafe ImageU8 ToGrayscaleImage(double rCoeff, double gCoeff, double bCoeff)
         {
             ImageU8 img = new ImageU8(this.Width, this.Height);
@@ -131,6 +136,54 @@ namespace Orc.SmartImage
                 while (p != end)
                 {
                     *to = (Byte)(( bCache[p->Red] + gCache[p->Green] + rCache[p->Red] ) >> 10);
+                    p++;
+                    to++;
+                }
+            }
+            return img;
+        }
+
+        public unsafe ImageInt32 ToGrayscaleImageInt32(double rCoeff, double gCoeff, double bCoeff)
+        {
+            ImageInt32 img = new ImageInt32(this.Width, this.Height);
+            Rgb24* p = Start;
+            Int32* to = img.Start;
+            Rgb24* end = p + Length;
+
+            if (Length < 1024)
+            {
+                while (p != end)
+                {
+                    *to = (Byte)(p->Red * rCoeff + p->Green * gCoeff + p->Blue * bCoeff);
+                    p++;
+                    to++;
+                }
+            }
+            else
+            {
+                int* bCache = stackalloc int[256];
+                int* gCache = stackalloc int[256];
+                int* rCache = stackalloc int[256];
+
+                const int shift = 1 << 10;
+                int rShift = (int)(rCoeff * shift);
+                int gShift = (int)(gCoeff * shift);
+                int bShift = shift - rShift - gShift;
+
+                int r = 0, g = 0, b = 0;
+                for (int i = 0; i < 256; i++)
+                {
+                    bCache[i] = b;
+                    gCache[i] = g;
+                    rCache[i] = r;
+                    b += bShift;
+                    g += gShift;
+                    r += rShift;
+                }
+
+                while (p != end)
+                {
+                    *to = (Byte)((bCache[p->Red] + gCache[p->Green] + rCache[p->Red]) >> 10);
                     p++;
                     to++;
                 }
