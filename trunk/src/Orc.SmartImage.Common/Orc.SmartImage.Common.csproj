@@ -76,8 +76,8 @@
     <Compile Include="Sampling\ImageSamplingAlgorithm.cs" />
     <Compile Include="UnmanagedImage\ImageArgb32ClassHelper.cs" />
     <Compile Include="UnmanagedImage\ImageArgb32ClassHelper_Csmacro.cs" />
-    <Compile Include="UnmanagedImage\ImageCibLab.cs" />
-    <Compile Include="UnmanagedImage\ImageCibXyz.cs" />
+    <Compile Include="UnmanagedImage\ImageCieLab.cs" />
+    <Compile Include="UnmanagedImage\ImageCieXyz.cs" />
     <Compile Include="UnmanagedImage\ImageInt32.cs" />
     <Compile Include="UnmanagedImage\ImageInt32ClassHelper.cs" />
     <Compile Include="UnmanagedImage\ImageInt32ClassHelper_Csmacro.cs" />

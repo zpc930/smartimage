@@ -26,6 +26,56 @@ namespace Orc.SmartImage
         {
             return (Byte)(0.299 * Red + 0.587 * Green + 0.114 * Blue);
         }
+
+        public CieXyz ToCieXyz()
+        {
+            double rLinear = Red / 255.0;
+            double gLinear = Green / 255.0;
+            double bLinear = Blue / 255.0;
+
+            double r = (rLinear > 0.04045) ? Math.Pow((rLinear + 0.055) / (1 + 0.055), 2.2) : (rLinear / 12.92);
+            double g = (gLinear > 0.04045) ? Math.Pow((gLinear + 0.055) / (1 + 0.055), 2.2) : (gLinear / 12.92);
+            double b = (bLinear > 0.04045) ? Math.Pow((bLinear + 0.055) / (1 + 0.055), 2.2) : (bLinear / 12.92);
+
+            return new CieXyz { X = r * 0.4124 + g * 0.3576 + b * 0.1805, Y = r * 0.2126 + g * 0.7152 + b * 0.0722, Z = r * 0.0193 + g * 0.1192 + b * 0.9505 };
+        }
+
+        public CieLab ToCieLab()
+        {
+            return ToCieXyz().ToCirLab();
+        }
+
+        public double GetCirLabDistance(Rgb24 other)
+        {
+            return ToCieLab().GetDistance(other.ToCieLab());
+        }
+
+        public double GetCirLabDistanceSquare(Rgb24 other)
+        {
+            return ToCieLab().GetDistanceSquare(other.ToCieLab());
+        }
+
+        public double GetDistance(Rgb24 other)
+        {
+            int deltaR = this.Red - other.Red;
+            int deltaG = this.Green - other.Green;
+            int deltaB = this.Blue - other.Blue;
+            int distance = deltaR * deltaR + deltaG * deltaG + deltaB * deltaB;
+            return Math.Sqrt(distance);
+        }
+
+        public int GetDistanceSquare(Rgb24 other)
+        {
+            int deltaR = this.Red - other.Red;
+            int deltaG = this.Green - other.Green;
+            int deltaB = this.Blue - other.Blue;
+            return deltaR * deltaR + deltaG * deltaG + deltaB * deltaB;
+        }
+
+        public override int GetHashCode()
+        {
+            return Red * 65536 + Green * 256 + Blue;
+        }
     }
 
     public struct Rgb24Converter : IByteConverter<Rgb24>
