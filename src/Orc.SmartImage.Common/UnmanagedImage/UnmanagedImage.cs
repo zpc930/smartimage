@@ -60,47 +60,6 @@ namespace Orc.SmartImage
             }
         }
 
-        ///// <summary>
-        ///// 性能约是指针操作的1/4。不适用于性能要求高的地方。
-        ///// </summary>
-        ///// <param name="index"></param>
-        ///// <returns></returns>
-        //public unsafe T this[int index]
-        //{
-        //    get
-        //    {
-        //        T t = new T();
-        //        m_converter.Copy(m_start + index * SizeOfType, ref t);
-        //        return t;
-        //    }
-        //    set 
-        //    {
-        //        Byte* to = m_start + index * SizeOfType;
-        //        m_converter.Copy(ref value, to);
-        //    }
-        //}
-
-        ///// <summary>
-        ///// 性能约是指针操作的1/4。不适用于性能要求高的地方。
-        ///// </summary>
-        ///// <param name="row"></param>
-        ///// <param name="col"></param>
-        ///// <returns></returns>
-        //public unsafe T this[int row, int col]
-        //{
-        //     get
-        //    {
-        //        T t = new T();
-        //        m_converter.Copy(m_start + (row * Width + col) * SizeOfType, ref t);
-        //        return t;
-        //    }
-        //    set 
-        //    {
-        //        Byte* to = m_start + (row * Width + col) * SizeOfType;
-        //        m_converter.Copy(ref value, to);
-        //    }
-        //}
-
         public void Dispose()
         {
             Dispose(true);

@@ -90,9 +90,9 @@ namespace Orc.SmartImage
         public static readonly ConvolutionKernel SobelY = new ConvolutionKernel(
             new int[,]
             {
-                {1, 2, 1},
+                {-1, -2, -1},
                 {0, 0, 0},
-                {-1,-2,-1}
+                {1,2,1}
             });
 
         /// <summary>
