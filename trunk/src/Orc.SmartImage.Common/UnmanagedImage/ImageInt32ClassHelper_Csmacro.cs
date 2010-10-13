@@ -272,6 +272,51 @@ namespace Orc.SmartImage
             }
         }
 
+        public void FloodFill(System.Drawing.Point location, TPixel anchorColor, TPixel replecedColor)
+        {
+            int width = this.Width;
+            int height = this.Height;
+            if (location.X < 0 || location.X >= width || location.Y < 0 || location.Y >= height) return;
+
+            if (anchorColor == replecedColor) return;
+            if (this[location.Y, location.X] != anchorColor) return;
+
+            Stack<System.Drawing.Point> points = new Stack<System.Drawing.Point>();
+            points.Push(location);
+
+            int ww = width - 1;
+            int hh = height - 1;
+
+            while (points.Count > 0)
+            {
+                System.Drawing.Point p = points.Pop();
+                this[p.Y, p.X] = replecedColor;
+                if (p.X > 0 && this[p.Y, p.X - 1] == anchorColor)
+                {
+                    this[p.Y, p.X - 1] = replecedColor;
+                    points.Push(new System.Drawing.Point(p.X - 1, p.Y));
+                }
+
+                if (p.X < ww && this[p.Y, p.X + 1] == anchorColor)
+                {
+                    this[p.Y, p.X + 1] = replecedColor;
+                    points.Push(new System.Drawing.Point(p.X + 1, p.Y));
+                }
+
+                if (p.Y > 0 && this[p.Y - 1, p.X] == anchorColor)
+                {
+                    this[p.Y - 1, p.X] = replecedColor;
+                    points.Push(new System.Drawing.Point(p.X, p.Y - 1));
+                }
+
+                if (p.Y < hh && this[p.Y + 1, p.X] == anchorColor)
+                {
+                    this[p.Y + 1, p.X] = replecedColor;
+                    points.Push(new System.Drawing.Point(p.X, p.Y + 1));
+                }
+            }
+        }
+
         
 
         

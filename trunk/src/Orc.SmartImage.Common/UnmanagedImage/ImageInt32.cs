@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace Orc.SmartImage
 {
@@ -52,6 +53,69 @@ namespace Orc.SmartImage
         public ImageInt32(Bitmap map)
             : base(map)
         {
+        }
+
+        public unsafe ImageRgb24 ToImageRgb24WithRamdomColorMap()
+        {
+            ImageRgb24 img = new ImageRgb24(this.Width, this.Height);
+            Random r = new Random();
+            int length = this.Length;
+            Dictionary<int, Rgb24> map = new Dictionary<int, Rgb24>();
+            for (int i = 0; i < length; i++)
+            {
+                int val = this[i];
+                if (map.ContainsKey(val))
+                {
+                    img[i] = map[val];
+                }
+                else
+                {
+                    Rgb24 newRgb = new Rgb24();
+                    newRgb.Red = (byte)(r.Next(256));
+                    newRgb.Green = (byte)(r.Next(256));
+                    newRgb.Blue = (byte)(r.Next(256));
+                    img[i] = newRgb;
+                    map.Add(val, newRgb);
+                }
+            }
+            return img;
+        }
+
+        /// <summary>
+        /// 直接将 int32 和 32bppArgb 一一对应的复制
+        /// </summary>
+        /// <param name="map"></param>
+        public unsafe Bitmap ToBitmapDirect()
+        {
+            Bitmap map = new Bitmap(this.Width, this.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            Int32* t = Start;
+
+            BitmapData data = map.LockBits(new Rectangle(0, 0, map.Width, map.Height), ImageLockMode.ReadWrite, map.PixelFormat);
+            try
+            {
+                int width = map.Width;
+                int height = map.Height;
+
+                Byte* line = (Byte*)data.Scan0;
+
+                for (int h = 0; h < height; h++)
+                {
+                    Int32* p = (Int32*)line;
+                    Int32* pEnd = p + width;
+                    while(p != pEnd)
+                    {
+                        *p = *t;
+                        p++;
+                        t++;
+                    }
+                    line += data.Stride;
+                }
+            }
+            finally
+            {
+                map.UnlockBits(data);
+            }
+            return map;
         }
 
         protected override IByteConverter<Int32> CreateByteConverter()
