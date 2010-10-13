@@ -1,6 +1,12 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FFB9DC51-7411-45F3-92DB-FC3CABB07D4F}"
+	ProjectSection(SolutionItems) = preProject
+		license.txt = license.txt
+		ref-license.txt = ref-license.txt
+	EndProjectSection
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orc.SmartImage.UI", "src\Orc.SmartImage.UI\Orc.SmartImage.UI.csproj", "{4791AB26-5A35-435B-A015-1B223D425F83}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orc.SmartImage.Lab", "src\Orc.SmartImage.Lab\Orc.SmartImage.Lab.csproj", "{69F9B333-16A8-4944-825E-1CC9DE43BF68}"
@@ -9,17 +15,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orc.SmartImage.Common", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orc.SmartImage.Processor", "src\Orc.SmartImage.Processor\Orc.SmartImage.Processor.csproj", "{5DE1F324-1B8D-43C7-8876-1AEC4CBDD3EE}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FFB9DC51-7411-45F3-92DB-FC3CABB07D4F}"
-	ProjectSection(SolutionItems) = preProject
-		license.txt = license.txt
-		ref-license.txt = ref-license.txt
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orc.SmartImage.CommonTest", "src\Orc.SmartImage.CommonTest\Orc.SmartImage.CommonTest.csproj", "{6EFB11E7-28AD-4D19-8315-7D39D302C6AD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orc.SmartImageLab.PerformanceTest", "src\Orc.SmartImageLab.PerformanceTest\Orc.SmartImageLab.PerformanceTest.csproj", "{4ACBC4C7-CE49-4EB5-BFF3-801F524DC358}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orc.SmartImage.AForgeProcessor", "src\Orc.SmartImage.AForgeProcessor\Orc.SmartImage.AForgeProcessor.csproj", "{8FC778D2-BFE5-4CF5-8184-96A9E45045B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,10 +49,6 @@ Global
 		{4ACBC4C7-CE49-4EB5-BFF3-801F524DC358}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4ACBC4C7-CE49-4EB5-BFF3-801F524DC358}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4ACBC4C7-CE49-4EB5-BFF3-801F524DC358}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8FC778D2-BFE5-4CF5-8184-96A9E45045B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8FC778D2-BFE5-4CF5-8184-96A9E45045B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8FC778D2-BFE5-4CF5-8184-96A9E45045B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8FC778D2-BFE5-4CF5-8184-96A9E45045B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
