@@ -43,5 +43,5 @@ namespace Orc.SmartImage.Processor
     //        this.m_cacheResults.Add(this.CreateInfoResult("hahaha"));
     //        return dst;
     //    }
-	}
+    //}
 }

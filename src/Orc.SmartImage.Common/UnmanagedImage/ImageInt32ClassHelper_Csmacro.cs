@@ -317,6 +317,90 @@ namespace Orc.SmartImage
             }
         }
 
+        /// <summary>
+        /// 使用众值滤波
+        /// </summary>
+        public unsafe void ApplyModeFilter(int size)
+        {
+            if (size <= 1) throw new ArgumentOutOfRangeException("size 必须大于1.");
+            else if (size > 127) throw new ArgumentOutOfRangeException("size 最大为127.");
+            else if (size % 2 == 0) throw new ArgumentException("size 应该是奇数.");
+
+            int* vals = stackalloc int[size * size + 1];
+            TPixel* keys = stackalloc TPixel[size * size + 1];
+
+            UnmanagedImage<TPixel> mask = this.Clone() as UnmanagedImage<TPixel>;
+            int height = this.Height;
+            int width = this.Width;
+
+            TPixel* pMask = (TPixel*)mask.StartIntPtr;
+            TPixel* pThis = (TPixel*)this.StartIntPtr;
+
+            int radius = size / 2;
+
+            for (int h = 0; h < height; h++)
+            {
+                for (int w = 0; w < width; w++)
+                {
+                    int count = 0;
+
+                    // 建立直方图
+                    for (int y = -radius; y <= radius; y++)
+                    {
+                        for (int x = -radius; x <= radius; x++)
+                        {
+                            int yy = y + h;
+                            int xx = x + w;
+                            if (xx >= 0 && xx < width && yy >= 0 && yy < height)
+                            {
+                                TPixel color = pMask[yy * width + xx];
+
+                                bool find = false;
+                                for (int i = 0; i < count; i++)
+                                {
+                                    if (keys[i] == color)
+                                    {
+                                        vals[i]++;
+                                        find = true;
+                                        break;
+                                    }
+                                }
+
+                                if (find == false)
+                                {
+                                    keys[count] = color;
+                                    vals[count] = 1;
+                                    count++;
+                                }
+                            }
+                        }
+                    }
+
+                    if (count > 0)
+                    {
+                        // 求众数
+                        int index = -1;
+                        int max = int.MinValue;
+                        for (int i = 0; i < count; i++)
+                        {
+                            if (vals[i] > max)
+                            {
+                                index = i;
+                                max = vals[i];
+                            }
+                        }
+
+                        if (max > 1)
+                        {
+                            pThis[h * width + w] = keys[index];
+                        }
+                    }
+                }
+            }
+
+            mask.Dispose();
+        }
+
         
 
         
