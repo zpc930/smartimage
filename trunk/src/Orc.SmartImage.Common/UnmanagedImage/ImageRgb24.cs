@@ -13,6 +13,20 @@ namespace Orc.SmartImage
         public static Rgb24 BLUE = new Rgb24 { Blue = 255 };
         public static Rgb24 GREEN = new Rgb24 { Green = 255 };
 
+        public Rgb24(int red, int green, int blue)
+        {
+            Red = (byte)red;
+            Green = (byte)green;
+            Blue = (byte)blue;
+        }
+
+        public Rgb24(byte red, byte green, byte blue)
+        {
+            Red = red;
+            Green = green;
+            Blue = blue;
+        }
+
         public Byte Blue;
         public Byte Green;
         public Byte Red;
