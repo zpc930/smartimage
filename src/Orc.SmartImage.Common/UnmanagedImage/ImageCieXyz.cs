@@ -12,7 +12,7 @@ namespace Orc.SmartImage
         public double Y { get; set; }
         public double Z { get; set; }
 
-        public CieLab ToCirLab()
+        public CieLab ToCieLab()
         {
             double l = 116.0 * Transform(Y / D65.Y) - 16;
             double a = 500.0 * (Transform(X / D65.X) - Transform(Y / D65.Y));

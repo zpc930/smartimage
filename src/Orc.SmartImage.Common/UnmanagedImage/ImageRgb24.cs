@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Orc.SmartImage
 {
+    [StructLayout(LayoutKind.Explicit)]
     public partial struct Rgb24
     {
         public static Rgb24 WHITE = new Rgb24 { Red = 255, Green = 255, Blue = 255 };
@@ -27,13 +29,34 @@ namespace Orc.SmartImage
             Blue = blue;
         }
 
+        [FieldOffset(0)]
         public Byte Blue;
+        [FieldOffset(1)]
         public Byte Green;
+        [FieldOffset(2)]
         public Byte Red;
 
         public override string ToString()
         {
             return "Rgb24 [R=" + Red.ToString() + ", G=" + Green.ToString() + ", B=" + Blue.ToString() + "]";
+        }
+
+        public void AdjustSaturation()
+        {
+            if (this.Red == this.Green && this.Red == this.Blue) return;
+
+            int max = Math.Max(Math.Max(this.Red, this.Blue), this.Green);
+            int min = Math.Min(Math.Min(this.Red, this.Blue), this.Green);
+            float coeff = (float)max / (max - min);
+            int red = (int)((this.Red - min) * coeff);
+            int green = (int)((this.Green - min) * coeff);
+            int blue = (int)((this.Blue - min) * coeff);
+            if (red > 255) red = 255;
+            if (green > 255) green = 255;
+            if (blue > 255) blue = 255;
+            this.Red = (byte)red;
+            this.Green = (byte)green;
+            this.Blue = (byte)blue;
         }
 
         public Byte ToGray()
@@ -56,7 +79,7 @@ namespace Orc.SmartImage
 
         public CieLab ToCieLab()
         {
-            return ToCieXyz().ToCirLab();
+            return ToCieXyz().ToCieLab();
         }
 
         public double GetCirLabDistance(Rgb24 other)
@@ -84,6 +107,14 @@ namespace Orc.SmartImage
             int deltaG = this.Green - other.Green;
             int deltaB = this.Blue - other.Blue;
             return deltaR * deltaR + deltaG * deltaG + deltaB * deltaB;
+        }
+
+        public int GetVisualDistanceSquare(Rgb24 other, int redCoeff = 1, int greenCoeff = 2, int blueCoeff = 1)
+        {
+            int deltaR = this.Red - other.Red;
+            int deltaG = this.Green - other.Green;
+            int deltaB = this.Blue - other.Blue;
+            return redCoeff * deltaR * deltaR + greenCoeff * deltaG * deltaG + blueCoeff * deltaB * deltaB;
         }
 
         public override int GetHashCode()
@@ -253,6 +284,75 @@ namespace Orc.SmartImage
                 }
             }
             return img;
+        }
+
+        public void DrawLine(PointF start, PointF end, Rgb24 color, int radius)
+        {
+            float deltaX = end.X - start.X;
+            float deltaY = end.Y - start.Y;
+            int ww = this.Width-1;
+            int hh = this.Height-1;
+
+            if (deltaX == 0)
+            {
+                if (deltaY == 0) return;
+
+                int yStart = (int)(start.Y);
+                int yEnd = (int)(end.Y);
+                int x = (int)(start.X);
+
+                if (yEnd < yStart)
+                {
+                    int tmp = yEnd;
+                    yEnd = yStart;
+                    yStart = tmp;
+                }
+
+                yStart = Math.Max(0, yStart);
+                yEnd = Math.Min(ww, yEnd);
+
+                for (int y = yStart; y <= yEnd; y++)
+                {
+                    SetColor(x, y, color, radius, ww, hh);
+                }
+            }
+            else
+            {
+                int xStart = (int)start.X;
+                int xEnd = (int)end.X;
+                if (xEnd < xStart)
+                {
+                    int tmp = xEnd;
+                    xEnd = xStart;
+                    xStart = tmp;
+                }
+
+                for (int x = xStart; x <= xEnd; x++)
+                {
+                    float deltaXX = start.X - x;
+                    float deltaYY = deltaY * (deltaXX / deltaX);
+                    int y = (int)(Math.Round(start.Y - deltaYY));
+
+                    SetColor(x, y, color, radius, ww, hh);
+                }
+            }
+        }
+
+        private void SetColor(int x, int y, Rgb24 color, int radius, int ww, int hh)
+        {
+            int xStart = x - radius;
+            int xEnd = x + radius;
+            int yStart = y - radius;
+            int yEnd = y + radius;
+
+            for (int yy = yStart; yy < yEnd; yy++)
+            {
+                for (int xx = xStart; xx < xEnd; xx++)
+                {
+                    if (xx < 0 || yy < 0 || xx > ww || yy > hh) break;
+                    this[yy, xx] = color;
+                }
+            }
         }
 
         public override IImage Clone()
