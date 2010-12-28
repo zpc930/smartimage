@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Orc.SmartImage</RootNamespace>
     <AssemblyName>Orc.SmartImage.Common</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -31,8 +31,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -72,16 +71,15 @@
     <CodeAnalysisRuleDirectories>;D:\Program Files\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Orc.Util, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Orc.Util.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\System.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
@@ -92,6 +90,11 @@
     <Compile Include="ClassHelper.cs" />
     <Compile Include="ColorRangeGSB05.cs" />
     <Compile Include="IPosition.cs" />
+    <Compile Include="UnmanagedImage\ImageLab24ClassHelper.cs" />
+    <Compile Include="UnmanagedImage\ImageLab24ClassHelper_Csmacro.cs" />
+    <Compile Include="UnmanagedImage\UnmanagedImageConverter.cs" />
+    <Compile Include="UnmanagedImage\ImageLab24.cs" />
+    <Compile Include="Utils\ColorCollection.cs" />
     <Compile Include="Sampling\ImageSamplingAlgorithm.cs" />
     <Compile Include="UnmanagedImage\ImageArgb32ClassHelper.cs" />
     <Compile Include="UnmanagedImage\ImageArgb32ClassHelper_Csmacro.cs" />
@@ -141,6 +144,12 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Orc\src\Orc.Util\Orc.Util.csproj">
+      <Project>{9771C724-359F-46FE-8FD0-7896353537AF}</Project>
+      <Name>Orc.Util</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

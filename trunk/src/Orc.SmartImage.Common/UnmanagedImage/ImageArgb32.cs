@@ -1,17 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Drawing.Imaging;
 
 namespace Orc.SmartImage
 {
+    [StructLayout(LayoutKind.Explicit)]
     public partial struct Argb32
     {
+        [FieldOffset(0)]
         public Byte Blue;
+        [FieldOffset(1)]
         public Byte Green;
+        [FieldOffset(2)]
         public Byte Red;
+        [FieldOffset(3)]
         public Byte Alpha;
+
+        //[FieldOffset(0)]
+        //public Byte Alpha;
+        //[FieldOffset(1)]
+        //public Byte Red;
+        //[FieldOffset(2)]
+        //public Byte Green;
+        //[FieldOffset(3)]
+        //public Byte Blue;
+
+        public Argb32(int red, int green, int blue, int alpha = 255)
+        {
+            Red = (byte)red;
+            Green = (byte)green;
+            Blue = (byte)blue;
+            Alpha = (byte)alpha;
+        }
+
+        public Argb32(byte red, byte green, byte blue, byte alpha = 255)
+        {
+            Red = red;
+            Green = green;
+            Blue = blue;
+            Alpha = alpha;
+        }
+
+        public Byte ToGray()
+        {
+            return (Byte)(0.299 * Red + 0.587 * Green + 0.114 * Blue);
+        }
 
         public override string ToString()
         {
