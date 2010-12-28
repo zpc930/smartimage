@@ -6,8 +6,10 @@ using System.Text;
 
 namespace Orc.SmartImage
 {
+    using Orc.Util;
+
     [StructLayout(LayoutKind.Explicit)]
-    public partial struct Rgb24
+    public partial struct Rgb24 : IMetriable<Rgb24>
     {
         public static Rgb24 WHITE = new Rgb24 { Red = 255, Green = 255, Blue = 255 };
         public static Rgb24 BLACK = new Rgb24 ();
@@ -27,6 +29,10 @@ namespace Orc.SmartImage
             Red = red;
             Green = green;
             Blue = blue;
+        }
+
+        public Rgb24(int value):this((value >> 16) & 0xFF, (value >> 8) & 0xFF, value & 0xFF)
+        {
         }
 
         [FieldOffset(0)]
@@ -64,32 +70,9 @@ namespace Orc.SmartImage
             return (Byte)(0.299 * Red + 0.587 * Green + 0.114 * Blue);
         }
 
-        public CieXyz ToCieXyz()
+        public Lab24 ToLab24()
         {
-            double rLinear = Red / 255.0;
-            double gLinear = Green / 255.0;
-            double bLinear = Blue / 255.0;
-
-            double r = (rLinear > 0.04045) ? Math.Pow((rLinear + 0.055) / (1 + 0.055), 2.2) : (rLinear / 12.92);
-            double g = (gLinear > 0.04045) ? Math.Pow((gLinear + 0.055) / (1 + 0.055), 2.2) : (gLinear / 12.92);
-            double b = (bLinear > 0.04045) ? Math.Pow((bLinear + 0.055) / (1 + 0.055), 2.2) : (bLinear / 12.92);
-
-            return new CieXyz { X = r * 0.4124 + g * 0.3576 + b * 0.1805, Y = r * 0.2126 + g * 0.7152 + b * 0.0722, Z = r * 0.0193 + g * 0.1192 + b * 0.9505 };
-        }
-
-        public CieLab ToCieLab()
-        {
-            return ToCieXyz().ToCieLab();
-        }
-
-        public double GetCirLabDistance(Rgb24 other)
-        {
-            return ToCieLab().GetDistance(other.ToCieLab());
-        }
-
-        public double GetCirLabDistanceSquare(Rgb24 other)
-        {
-            return ToCieLab().GetDistanceSquare(other.ToCieLab());
+            return Lab24.CreateFrom(this);
         }
 
         public double GetDistance(Rgb24 other)
@@ -119,7 +102,7 @@ namespace Orc.SmartImage
 
         public override int GetHashCode()
         {
-            return Red * 65536 + Green * 256 + Blue;
+            return (Red << 16) + (Green << 8) + Blue;
         }
     }
 
@@ -286,6 +269,104 @@ namespace Orc.SmartImage
             return img;
         }
 
+        public unsafe void ApplyMedianFilter(int medianRadius)
+        {
+            if (medianRadius > 0)
+            {
+                // 进行中值滤波
+                using (ImageRgb24 copy = this.Clone() as ImageRgb24)
+                {
+                    int size = medianRadius * 2 + 1;
+                    int count = 0;
+                    byte[] r = new byte[size * size];
+                    byte[] g = new byte[size * size];
+                    byte[] b = new byte[size * size];
+                    int height = this.Height;
+                    int width = this.Width;
+                    for (int y = 0; y < height; y++)
+                    {
+                        for (int x = 0; x < width; x++)
+                        {
+                            count = 0;
+                            for (int h = -medianRadius; h <= medianRadius; h++)
+                            {
+                                for (int w = -medianRadius; w <= medianRadius; w++)
+                                {
+                                    int hh = y + h;
+                                    int ww = x + w;
+                                    if (hh >= 0 && hh < height && ww >= 0 && ww < width)
+                                    {
+                                        Rgb24 c = copy[hh, ww];
+                                        r[count] = c.Red;
+                                        g[count] = c.Green;
+                                        b[count] = c.Blue;
+                                        count++;
+                                    }
+                                }
+                            }
+
+                            Array.Sort(r, 0, count);
+                            Array.Sort(g, 0, count);
+                            Array.Sort(b, 0, count);
+                            int m = count >> 1;
+                            Rgb24 median = new Rgb24 { Red = r[m], Green = g[m], Blue = b[m] };
+                            this[y, x] = median;
+                        }
+                    }
+                }
+            }
+        }
+
+        public unsafe void ApplyMedianFilter(int medianRadius, IList<Point> points)
+        {
+            if (medianRadius <= 0 || points == null) return;
+            Rgb24[] vals = new Rgb24[points.Count];
+            int size = medianRadius * 2 + 1;
+            int count = 0;
+            byte[] r = new byte[size * size];
+            byte[] g = new byte[size * size];
+            byte[] b = new byte[size * size];
+            int height = this.Height;
+            int width = this.Width;
+
+            for (int i = 0; i < points.Count; i++)
+            {
+                Point p = points[i];
+                int x = p.X;
+                int y = p.Y;
+                count = 0;
+                for (int h = -medianRadius; h <= medianRadius; h++)
+                {
+                    for (int w = -medianRadius; w <= medianRadius; w++)
+                    {
+                        int hh = y + h;
+                        int ww = x + w;
+                        if (hh >= 0 && hh < height && ww >= 0 && ww < width)
+                        {
+                            Rgb24 c = this[hh, ww];
+                            r[count] = c.Red;
+                            g[count] = c.Green;
+                            b[count] = c.Blue;
+                            count++;
+                        }
+                    }
+                }
+
+                Array.Sort(r, 0, count);
+                Array.Sort(g, 0, count);
+                Array.Sort(b, 0, count);
+                int m = count >> 1;
+                Rgb24 median = new Rgb24 { Red = r[m], Green = g[m], Blue = b[m] };
+                vals[i] = median;
+            }
+
+            for (int i = 0; i < points.Count; i++)
+            {
+                Point p = points[i];
+                this[p] = vals[i];
+            }
+        }
+
         public void DrawLine(PointF start, PointF end, Rgb24 color, int radius)
         {
             float deltaX = end.X - start.X;
@@ -295,15 +376,19 @@ namespace Orc.SmartImage
 
             if (deltaX == 0)
             {
-                if (deltaY == 0) return;
+                if (deltaY == 0)
+                {
+                    SetColor(start.X, start.Y, color, radius, ww, hh);
+                    return;
+                };
 
-                int yStart = (int)(start.Y);
-                int yEnd = (int)(end.Y);
-                int x = (int)(start.X);
+                float yStart = start.Y;
+                float yEnd = end.Y;
+                float x = start.X;
 
                 if (yEnd < yStart)
                 {
-                    int tmp = yEnd;
+                    float tmp = yEnd;
                     yEnd = yStart;
                     yStart = tmp;
                 }
@@ -311,46 +396,50 @@ namespace Orc.SmartImage
                 yStart = Math.Max(0, yStart);
                 yEnd = Math.Min(ww, yEnd);
 
-                for (int y = yStart; y <= yEnd; y++)
+                for (float y = yStart; y <= yEnd; y++)
                 {
                     SetColor(x, y, color, radius, ww, hh);
                 }
             }
             else
             {
-                int xStart = (int)start.X;
-                int xEnd = (int)end.X;
+                float xStart = start.X;
+                float xEnd = end.X;
                 if (xEnd < xStart)
                 {
-                    int tmp = xEnd;
+                    float tmp = xEnd;
                     xEnd = xStart;
                     xStart = tmp;
                 }
 
-                for (int x = xStart; x <= xEnd; x++)
+                for (float x = xStart; x <= xEnd; x++)
                 {
                     float deltaXX = start.X - x;
                     float deltaYY = deltaY * (deltaXX / deltaX);
-                    int y = (int)(Math.Round(start.Y - deltaYY));
+                    float y = start.Y - deltaYY;
 
                     SetColor(x, y, color, radius, ww, hh);
                 }
             }
         }
 
-        private void SetColor(int x, int y, Rgb24 color, int radius, int ww, int hh)
+        private void SetColor(float x, float y, Rgb24 color, int radius, int ww, int hh)
         {
-            int xStart = x - radius;
-            int xEnd = x + radius;
-            int yStart = y - radius;
-            int yEnd = y + radius;
+            int xStart = (int)( x - radius -1);
+            int xEnd = (int)(x + radius + 1);
+            int yStart = (int)(y - radius - 1);
+            int yEnd = (int)(y + radius + 1);
 
+            int maxDistanceSquare = radius * radius;
             for (int yy = yStart; yy < yEnd; yy++)
             {
                 for (int xx = xStart; xx < xEnd; xx++)
                 {
                     if (xx < 0 || yy < 0 || xx > ww || yy > hh) break;
-                    this[yy, xx] = color;
+                    float deltaX = xx - x;
+                    float deltaY = yy - y;
+                    if(deltaX * deltaX + deltaY * deltaY <= maxDistanceSquare)
+                        this[yy, xx] = color;
                 }
             }
         }
