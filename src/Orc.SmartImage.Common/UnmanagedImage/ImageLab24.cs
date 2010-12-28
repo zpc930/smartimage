@@ -6,7 +6,9 @@ using System.Text;
 
 namespace Orc.SmartImage
 {
-    public partial struct Lab24
+    using Orc.Util;
+
+    public partial struct Lab24 : IMetriable<Lab24>
     {
         public byte L;
         public byte A;
@@ -32,6 +34,11 @@ namespace Orc.SmartImage
             int deltaA = this.A - other.A;
             int deltaB = this.B - other.B;
             return (int)(0.16 * deltaL * deltaL) + deltaA * deltaA + deltaB * deltaB;
+        }
+
+        public double GetDistance(Lab24 other)
+        {
+            return Math.Sqrt(GetDistanceSquare(other));
         }
 
         #region RGB 与 Lab 互相转换 ，从 OpenCV 项目中借鉴得到
