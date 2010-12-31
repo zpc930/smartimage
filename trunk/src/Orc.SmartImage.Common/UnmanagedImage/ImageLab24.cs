@@ -121,7 +121,7 @@ namespace Orc.SmartImage
 
         protected override IByteConverter<Lab24> CreateByteConverter()
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public override IImage Clone()

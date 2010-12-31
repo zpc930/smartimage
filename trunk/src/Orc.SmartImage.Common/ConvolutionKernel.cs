@@ -95,6 +95,42 @@ namespace Orc.SmartImage
                 {1,2,1}
             });
 
+        public static unsafe ConvolutionKernel CreateGaussianKernel(double sigma = 1.4, int size = 5)
+        {
+            sigma = Math.Max(0.5, Math.Min(5.0, sigma));
+            size = Math.Max(3, Math.Min(21, size | 1));
+            double sqrSigma = sigma * sigma;
+            double* kernel = stackalloc double[size*size];
+            int r = size / 2;
+
+            for (int y = -r, i = 0; i < size; y++, i++)
+            {
+                for (int x = -r, j = 0; j < size; x++, j++)
+                {
+                    kernel[i + j * size] = Math.Exp((x * x + y * y) / (-2 * sqrSigma)) / (2 * Math.PI * sqrSigma);
+                }
+            }
+            double min = kernel[0];
+            int scale = 0;
+            int[,] intKernel = new int[size, size];
+            for (int i = 0; i < size; i++)
+            {
+                for (int j = 0; j < size; j++)
+                {
+                    double v = kernel[i + j*size] / min;
+                    if (v > ushort.MaxValue)
+                    {
+                        v = ushort.MaxValue;
+                    }
+                    intKernel[i, j] = (int)v;
+                    scale += intKernel[i, j];
+                }
+            }
+            return new ConvolutionKernel(intKernel,scale);
+        }
+
+
+
         /// <summary>
         /// int[height, width]
         /// </summary>

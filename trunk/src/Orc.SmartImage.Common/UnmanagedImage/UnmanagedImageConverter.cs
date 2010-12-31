@@ -88,7 +88,6 @@ namespace Orc.SmartImage
         const float labLScale_32f = 116.0f;
         const float labLShift_32f = 16.0f;
 
-
         const int labSmallScale = (int)((31.27 /* labSmallScale_32f*(1<<lab_shift)/255 */ ) * (1 << (lab_shift)) + 0.5);
 
         const int labSmallShift = (int)((141.24138 /* labSmallScale_32f*(1<<lab) */ ) * (1 << (lab_shift)) + 0.5);
@@ -170,6 +169,8 @@ namespace Orc.SmartImage
 
         public static unsafe void ToRgb24(Lab24* from, Rgb24* to, int length=1)
         {
+            if (length < 1) return;
+
             // 使用 OpenCV 中的算法实现
             const float coeff0 = 0.39215686274509809f;
             const float coeff1 = 0.0f;
