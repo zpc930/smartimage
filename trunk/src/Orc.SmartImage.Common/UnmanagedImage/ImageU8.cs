@@ -262,15 +262,193 @@ namespace Orc.SmartImage
             return img32;
         }
 
-        public void ApplyCannyEdgeDetector(byte lowThreshold = 20, byte highThreshold = 100)
-        {
-
-        }
-
         public void ApplyGaussianBlur(double sigma = 1.4, int size = 5)
         {
             ConvolutionKernel kernel = ConvolutionKernel.CreateGaussianKernel(sigma, size);
             this.ApplyConvolution(kernel);
+        }
+
+        public unsafe void ApplyCannyEdgeDetector(double gaussianSiama = 1.4, int gaussianSize = 5, byte lowThreshold = 20, byte highThreshold = 100)
+        {
+            ImageU8 copy = this.Clone() as ImageU8;
+            int startX = 1;
+            int startY = 1;
+            int width = this.Width;
+            int height = this.Height;
+
+            int stopX = width - 1;
+            int stopY = height - 1;
+            int ww = width - 2;
+            int hh = height - 2;
+
+            // orientation array
+            byte[] orients = new byte[ww * hh];
+            // gradients array
+            float[,] gradients = new float[this.Width, this.Height];
+            float maxGradient = float.NegativeInfinity;
+            double gx, gy;
+            double orientation, toAngle = 180.0 / System.Math.PI;
+            float leftPixel = 0, rightPixel = 0;
+
+            // 第一步，Gauss 平滑
+            copy.ApplyGaussianBlur(gaussianSiama, gaussianSize);
+            byte* start = copy.Start + startX;
+            int o = 0;
+            for (int y = startY; y < stopY; y++)
+            {
+                byte* line = start + y * width;
+                byte* p = line;
+                for (int x = startX; x < stopX; x++, p++, o++)
+                {
+                    gx = p[-width+1] + p[width+1] 
+                        - p[-width-1] - p[width-1]
+                        + 2 * (p[1] - p[-1]);
+                    gy = p[-width - 1] + p[-width + 1]
+                        - p[width - 1] - p[width + 1]
+                        + 2 * (p[-width] - p[width]);
+                    gradients[x, y] = (float)Math.Sqrt(gx * gx + gy * gy);
+                    if (gradients[x, y] > maxGradient)
+                        maxGradient = gradients[x, y];
+
+                    // get orientation
+                    if (gx == 0)
+                    {
+                        orientation = (gy == 0) ? 0 : 90;
+                    }
+                    else
+                    {
+                        double div = gy / gx;
+                        // handle angles of the 2nd and 4th quads
+                        if (div < 0)
+                        {
+                            orientation = 180 - System.Math.Atan(-div) * toAngle;
+                        }
+                        // handle angles of the 1st and 3rd quads
+                        else
+                        {
+                            orientation = System.Math.Atan(div) * toAngle;
+                        }
+
+                        // get closest angle from 0, 45, 90, 135 set
+                        if (orientation < 22.5)
+                            orientation = 0;
+                        else if (orientation < 67.5)
+                            orientation = 45;
+                        else if (orientation < 112.5)
+                            orientation = 90;
+                        else if (orientation < 157.5)
+                            orientation = 135;
+                        else orientation = 0;
+                    }
+
+                    // save orientation
+                    orients[o] = (byte)orientation;
+                }
+            }
+
+            // STEP 3 - suppres non maximums
+            o = 0;
+            start = this.Start + startX;
+            for (int y = startY; y < stopY; y++)
+            {
+                byte* line = start + y * width;
+                byte* p = line;
+                // for each pixel
+                for (int x = startX; x < stopX; x++, p++, o++)
+                {
+                    // get two adjacent pixels
+                    switch (orients[o])
+                    {
+                        case 0:
+                            leftPixel = gradients[x - 1, y];
+                            rightPixel = gradients[x + 1, y];
+                            break;
+                        case 45:
+                            leftPixel = gradients[x - 1, y + 1];
+                            rightPixel = gradients[x + 1, y - 1];
+                            break;
+                        case 90:
+                            leftPixel = gradients[x, y + 1];
+                            rightPixel = gradients[x, y - 1];
+                            break;
+                        case 135:
+                            leftPixel = gradients[x + 1, y + 1];
+                            rightPixel = gradients[x - 1, y - 1];
+                            break;
+                    }
+                    // compare current pixels value with adjacent pixels
+                    if ((gradients[x, y] < leftPixel) || (gradients[x, y] < rightPixel))
+                    {
+                        *p = 0;
+                    }
+                    else
+                    {
+                        *p = (byte)(gradients[x, y] / maxGradient * 255);
+                    }
+                }
+            }
+
+            // STEP 4 - hysteresis
+            start = this.Start + startX;
+            for (int y = startY; y < stopY; y++)
+            {
+                byte* line = start + y * width;
+                byte* p = line;
+                for (int x = startX; x < stopX; x++, p++)
+                {
+                    if (*p < highThreshold)
+                    {
+                        if (*p < lowThreshold)
+                        {
+                            // non edge
+                            *p = 0;
+                        }
+                        else
+                        {
+                            // check 8 neighboring pixels
+                            if ((p[-1] < highThreshold) &&
+                                (p[1] < highThreshold) &&
+                                (p[-width - 1] < highThreshold) &&
+                                (p[-width] < highThreshold) &&
+                                (p[-width + 1] < highThreshold) &&
+                                (p[width - 1] < highThreshold) &&
+                                (p[width] < highThreshold) &&
+                                (p[width + 1] < highThreshold))
+                            {
+                                *p = 0;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // STEP 4 将第1行，最后一行，第0列，最后1列
+
+            // 第1行
+            start = this.Start;
+            byte* end = start + width;
+            while (start != end)
+            {
+                *start = 0;
+                start++;
+            }
+
+            // 最后一行
+            start = this.Start + width * height - width;
+            end = start + width;
+            while (start != end)
+            {
+                *start = 0;
+                start++;
+            }
+
+            // 第一列和最后一列
+            start = this.Start;
+            for (int y = 0; y < height; y++,start += width)
+            {
+                start[0] = 0;
+                start[width-1] = 0;
+            }
         }
     }
 }
