@@ -261,5 +261,16 @@ namespace Orc.SmartImage
             }
             return img32;
         }
+
+        public void ApplyCannyEdgeDetector(byte lowThreshold = 20, byte highThreshold = 100)
+        {
+
+        }
+
+        public void ApplyGaussianBlur(double sigma = 1.4, int size = 5)
+        {
+            ConvolutionKernel kernel = ConvolutionKernel.CreateGaussianKernel(sigma, size);
+            this.ApplyConvolution(kernel);
+        }
     }
 }

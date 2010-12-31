@@ -42,6 +42,10 @@ namespace Orc.SmartImage
         [FieldOffset(2)]
         public Byte Red;
 
+        public static readonly int BlueChennel = 0;
+        public static readonly int GreenChannel = 1;
+        public static readonly int RedChannel = 2;
+
         public override string ToString()
         {
             return "Rgb24 [R=" + Red.ToString() + ", G=" + Green.ToString() + ", B=" + Blue.ToString() + "]";
@@ -171,6 +175,24 @@ namespace Orc.SmartImage
         public ImageInt32 ToGrayscaleImageInt32()
         {
             return ToGrayscaleImageInt32(0.299, 0.587, 0.114);
+        }
+
+        public unsafe ImageU8 CopyChannel(int channel)
+        {
+            if (channel < 0 && channel > 2) throw new ArgumentOutOfRangeException("channel");
+            int length = this.Length;
+            Byte* start = (Byte*)this.StartIntPtr;
+            int size = sizeof(Rgb24);
+            Byte* end = start + sizeof(Rgb24) * length;
+            ImageU8 imgU8 = new ImageU8(this.Width, this.Height);
+            Byte* dst = imgU8.Start;
+            while(start != end)
+            {
+                *dst = start[channel];
+                start += size;
+                dst ++;
+            }
+            return imgU8;
         }
 
         public unsafe ImageU8 ToGrayscaleImage(double rCoeff, double gCoeff, double bCoeff)
