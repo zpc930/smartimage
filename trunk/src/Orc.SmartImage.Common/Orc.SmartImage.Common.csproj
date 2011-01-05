@@ -90,6 +90,7 @@
     <Compile Include="ClassHelper.cs" />
     <Compile Include="ColorRangeGSB05.cs" />
     <Compile Include="IPosition.cs" />
+    <Compile Include="PolarPoint.cs" />
     <Compile Include="UnmanagedImage\ImageLab24ClassHelper.cs" />
     <Compile Include="UnmanagedImage\ImageLab24ClassHelper_Csmacro.cs" />
     <Compile Include="UnmanagedImage\UnmanagedImageConverter.cs" />
