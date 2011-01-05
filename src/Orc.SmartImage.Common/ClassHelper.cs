@@ -82,5 +82,28 @@ namespace Orc.SmartImage
         {
             return p.Y * Int16.MaxValue + p.X;
         }
+
+        public static PolarPointD ToPolarPointD(this Point p)
+        {
+            double angle = Math.Atan2(p.Y, p.X) * (180 / Math.PI);
+            if (p.X >= 0)
+            {
+                if (angle < 0) angle = angle + 360;
+            }
+            else
+            {
+                angle = angle + 180;
+            }
+            double radius = Math.Sqrt(p.X * p.X + p.Y * p.Y);
+            return new PolarPointD(radius, angle);
+        }
+
+        public static PolarPoint ToPolarPoint(this Point p)
+        {
+            double angle = Math.Atan2(p.Y, p.X) * (180 / Math.PI);
+            if (angle < 0) angle = 360 + angle;
+            double radius = Math.Sqrt(p.X * p.X + p.Y * p.Y);
+            return new PolarPoint((int)radius, (int)angle);
+        }
     }
 }
