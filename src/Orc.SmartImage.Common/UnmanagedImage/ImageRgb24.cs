@@ -110,43 +110,21 @@ namespace Orc.SmartImage
         }
     }
 
-    public struct Rgb24Converter : IByteConverter<Rgb24>
+    public struct Rgb24Converter : IColorConverter
     {
-        public unsafe void Copy(byte* from, Argb32* to)
+        public unsafe void Copy(Rgb24* from, void* to, int length)
         {
-            to->Blue = from[0];
-            to->Green = from[1];
-            to->Red = from[2];
-            to->Alpha = 255;
+            UnmanagedImageConverter.Copy((byte*)from, (byte*)to, 3* length);
         }
 
-        public unsafe void Copy(Argb32* from, byte* to)
+        public unsafe void Copy(Argb32* from, void* to, int length)
         {
-            to[0] = from->Blue;
-            to[1] = from->Green;
-            to[2] = from->Red;
+            UnmanagedImageConverter.ToRgb24(from, (Rgb24*)to, length);
         }
 
-        public unsafe void Copy(Rgb24* from, byte* to)
+        public unsafe void Copy(byte* from, void* to, int length)
         {
-            to[0] = from->Blue;
-            to[1] = from->Green;
-            to[2] = from->Red;
-        }
-
-
-        public unsafe void Copy(byte* from, ref Rgb24 to)
-        {
-            to.Blue = from[0];
-            to.Green = from[1];
-            to.Blue = from[2];
-        }
-
-        public unsafe void Copy(ref Rgb24 from, byte* to)
-        {
-            to[0] = from.Blue;
-            to[1] = from.Green;
-            to[2] = from.Red;
+            UnmanagedImageConverter.ToRgb24(from, (Rgb24*)to, length);
         }
     }
 
@@ -162,7 +140,7 @@ namespace Orc.SmartImage
         {
         }
 
-        protected override IByteConverter<Rgb24> CreateByteConverter()
+        protected override IColorConverter CreateByteConverter()
         {
             return new Rgb24Converter();
         }
@@ -471,6 +449,16 @@ namespace Orc.SmartImage
             ImageRgb24 img = new ImageRgb24(this.Width, this.Height);
             img.CloneFrom(this);
             return img;
+        }
+
+        protected override System.Drawing.Imaging.PixelFormat GetOutputBitmapPixelFormat()
+        {
+            return System.Drawing.Imaging.PixelFormat.Format24bppRgb;
+        }
+
+        protected override unsafe void ToBitmapCore(byte* src, byte* dst, int width)
+        {
+            UnmanagedImageConverter.Copy(src, dst, width * 3);
         }
     }
 }

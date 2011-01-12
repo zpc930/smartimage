@@ -98,6 +98,24 @@ namespace Orc.SmartImage
         #endregion
     }
 
+    public struct Lab24Converter : IColorConverter
+    {
+        public unsafe void Copy(Rgb24* from, void* to, int length)
+        {
+            UnmanagedImageConverter.ToLab24(from, (Lab24*)to, length);
+        }
+
+        public unsafe void Copy(Argb32* from, void* to, int length)
+        {
+            UnmanagedImageConverter.ToLab24(from, (Lab24*)to, length);
+        }
+
+        public unsafe void Copy(byte* from, void* to, int length)
+        {
+            UnmanagedImageConverter.ToLab24(from, (Lab24*)to, length);
+        }
+    }
+
     public partial class ImageLab24 : UnmanagedImage<Lab24>
     {
         public unsafe ImageLab24(Int32 width,Int32 height)
@@ -119,9 +137,9 @@ namespace Orc.SmartImage
             return img;
         }
 
-        protected override IByteConverter<Lab24> CreateByteConverter()
+        protected override IColorConverter CreateByteConverter()
         {
-            return null;
+            return new Lab24Converter();
         }
 
         public override IImage Clone()
@@ -129,6 +147,16 @@ namespace Orc.SmartImage
             ImageLab24 img = new ImageLab24(this.Width,this.Height);
             img.CloneFrom(this);
             return img;
+        }
+
+        protected override System.Drawing.Imaging.PixelFormat GetOutputBitmapPixelFormat()
+        {
+            return System.Drawing.Imaging.PixelFormat.Format24bppRgb;
+        }
+
+        protected override unsafe void ToBitmapCore(byte* src, byte* dst, int width)
+        {
+            UnmanagedImageConverter.ToRgb24((Lab24*)src, (Rgb24*)dst, width);
         }
     }
 }

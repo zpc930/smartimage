@@ -55,41 +55,21 @@ namespace Orc.SmartImage
         }
     }
 
-    public struct Argb32Converter : IByteConverter<Argb32>
+    public struct Argb32Converter : IColorConverter
     {
-        public unsafe void Copy(byte* from, Argb32* to)
+        public unsafe void Copy(Rgb24* from, void* to, int length)
         {
-            *to = *((Argb32*)from);
+            UnmanagedImageConverter.ToArgb32(from, (Argb32*)to, length);
         }
 
-        public unsafe void Copy(Argb32* from, byte* to)
+        public unsafe void Copy(Argb32* from, void* to, int length)
         {
-            *((Argb32*)to) = *from;
+            UnmanagedImageConverter.Copy((byte*)from, (byte*)to, 4* length);
         }
 
-        public unsafe void Copy(Rgb24* from, byte* to)
+        public unsafe void Copy(byte* from, void* to, int length)
         {
-            Argb32* c = (Argb32*)to;
-            c->Blue = from->Blue;
-            c->Green = from->Green;
-            c->Red = from->Red;
-            c->Alpha = 255;
-        }
-
-        public unsafe void Copy(byte* from, ref Argb32 to)
-        {
-            to.Blue = from[0];
-            to.Green = from[1];
-            to.Blue = from[2];
-            to.Alpha = from[3];
-        }
-
-        public unsafe void Copy(ref Argb32 from, byte* to)
-        {
-            to[0] = from.Blue;
-            to[1] = from.Green;
-            to[2] = from.Red;
-            to[3] = from.Alpha;
+            UnmanagedImageConverter.ToArgb32(from, (Argb32*)to, length);
         }
     }
 
@@ -104,7 +84,7 @@ namespace Orc.SmartImage
         {
         }
 
-        protected override IByteConverter<Argb32> CreateByteConverter()
+        protected override IColorConverter CreateByteConverter()
         {
             return new Argb32Converter();
         }
@@ -167,6 +147,16 @@ namespace Orc.SmartImage
             ImageArgb32 img = new ImageArgb32(this.Width, this.Height);
             img.CloneFrom(this);
             return img;
+        }
+
+        protected override System.Drawing.Imaging.PixelFormat GetOutputBitmapPixelFormat()
+        {
+            return System.Drawing.Imaging.PixelFormat.Format32bppArgb;
+        }
+
+        protected override unsafe void ToBitmapCore(byte* src, byte* dst, int width)
+        {
+            UnmanagedImageConverter.Copy(src, dst, width * 4);
         }
     }
 }
