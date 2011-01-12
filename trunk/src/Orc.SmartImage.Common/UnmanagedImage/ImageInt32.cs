@@ -6,40 +6,29 @@ using System.Drawing.Imaging;
 
 namespace Orc.SmartImage
 {
-    public struct Int32Converter : IByteConverter<Int32>
+    public struct Int32Converter : IColorConverter
     {
-        public unsafe void Copy(byte* from, Argb32* to)
+        public unsafe void Copy(Rgb24* from, void* to, int length)
         {
-            Int32 c = *((Int32*)from);
-            byte data = c > 255 ? (byte)255 : c < 0 ? (byte)0 : (byte)c;
-            to->Blue = data;
-            to->Green = data;
-            to->Red = data;
-            to->Alpha = 255;
+            UnmanagedImageConverter.ToArgb32(from, (Argb32*)to, length);
         }
 
-        public unsafe void Copy(Argb32* from, byte* to)
+        public unsafe void Copy(Argb32* from, void* to, int length)
         {
-            Int32* p = (Int32*)to;
-            *p = (Byte)(from->Blue * 0.114 + from->Green * 0.587 + from->Red * 0.299);
+            UnmanagedImageConverter.Copy((Byte*)from, (Byte*)to, length * 4);
         }
 
-        public unsafe void Copy(Rgb24* from, byte* to)
+        public unsafe void Copy(byte* from, void* to, int length)
         {
-            Int32* p = (Int32*)to;
-            *p = (Byte)(from->Blue * 0.114 + from->Green * 0.587 + from->Red * 0.299);
-        }
-
-        public unsafe void Copy(byte* from, ref Int32 to)
-        {
-            Int32* p = (Int32*)from;
-            to = *p;
-        }
-
-        public unsafe void Copy(ref Int32 from, byte* to)
-        {
-            Int32* p = (Int32*)to;
-            *p = from;
+            if (length < 1) return;
+            Byte* end = from + length;
+            Int32* dst = (Int32*)to;
+            while (from != end)
+            {
+                *dst = *from;
+                from++;
+                dst++;
+            }
         }
     }
 
@@ -118,7 +107,7 @@ namespace Orc.SmartImage
             return map;
         }
 
-        protected override IByteConverter<Int32> CreateByteConverter()
+        protected override IColorConverter CreateByteConverter()
         {
             return new Int32Converter();
         }
@@ -145,6 +134,25 @@ namespace Orc.SmartImage
                 dst++;
             }
             return imgU8;
+        }
+
+        protected override PixelFormat GetOutputBitmapPixelFormat()
+        {
+            return PixelFormat.Format8bppIndexed;
+        }
+
+        protected override unsafe void ToBitmapCore(byte* src, byte* dst, int width)
+        {
+            Int32* start = (Int32*)src;
+            Int32* end = start + width;
+            while (start != end)
+            {
+                Int32 val = *start;
+                val = val < 0? 0: val > 255 ? 255 : val;
+                *dst = (byte)val;
+                start++;
+                dst++;
+            }
         }
     }
 }

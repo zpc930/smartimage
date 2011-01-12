@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Linq;
 using System.Text;
 
@@ -98,6 +99,18 @@ namespace Orc.SmartImage
         const int labLShift = (int)((41779.2) * (1 << (lab_shift)) + 0.5);
         const int labLScale2 = (int)((labLScale2_32f * 0.01) * (1 << (lab_shift)) + 0.5);
 
+        public static unsafe void Copy(Byte* from, Byte* to, int length)
+        {
+            if (length < 1) return;
+            Byte* end = from + length;
+            while (from != end)
+            {
+                *to = *from;
+                from++;
+                to++;
+            }
+        }
+
         public static unsafe void ToLab24(Rgb24* from, Lab24* to, int length=1)
         {
             // 使用 OpenCV 中的算法实现
@@ -167,6 +180,145 @@ namespace Orc.SmartImage
             }
         }
 
+        public static unsafe void ToLab24(Argb32* from, Lab24* to, int length = 1)
+        {
+            // 使用 OpenCV 中的算法实现
+
+            if (length < 1) return;
+
+            Argb32* end = from + length;
+
+            int x, y, z;
+            int l, a, b;
+            bool flag;
+
+            while (from != end)
+            {
+                Byte red = from->Red;
+                Byte green = from->Green;
+                Byte blue = from->Blue;
+
+                x = blue * labXb + green * labXg + red * labXr;
+                y = blue * labYb + green * labYg + red * labYr;
+                z = blue * labZb + green * labZg + red * labZr;
+
+                flag = x > labT;
+
+                x = (((x) + (1 << ((lab_shift) - 1))) >> (lab_shift));
+
+                if (flag)
+                    x = icvLabCubeRootTab[x];
+                else
+                    x = (((x * labSmallScale + labSmallShift) + (1 << ((lab_shift) - 1))) >> (lab_shift));
+
+                flag = z > labT;
+                z = (((z) + (1 << ((lab_shift) - 1))) >> (lab_shift));
+
+                if (flag == true)
+                    z = icvLabCubeRootTab[z];
+                else
+                    z = (((z * labSmallScale + labSmallShift) + (1 << ((lab_shift) - 1))) >> (lab_shift));
+
+                flag = y > labT;
+                y = (((y) + (1 << ((lab_shift) - 1))) >> (lab_shift));
+
+                if (flag == true)
+                {
+                    y = icvLabCubeRootTab[y];
+                    l = (((y * labLScale - labLShift) + (1 << ((2 * lab_shift) - 1))) >> (2 * lab_shift));
+                }
+                else
+                {
+                    l = (((y * labLScale2) + (1 << ((lab_shift) - 1))) >> (lab_shift));
+                    y = (((y * labSmallScale + labSmallShift) + (1 << ((lab_shift) - 1))) >> (lab_shift));
+                }
+
+                a = (((500 * (x - y)) + (1 << ((lab_shift) - 1))) >> (lab_shift)) + 129;
+                b = (((200 * (y - z)) + (1 << ((lab_shift) - 1))) >> (lab_shift)) + 128;
+
+                l = l > 255 ? 255 : l < 0 ? 0 : l;
+                a = a > 255 ? 255 : a < 0 ? 0 : a;
+                b = b > 255 ? 255 : b < 0 ? 0 : b;
+
+                to->L = (byte)l;
+                to->A = (byte)a;
+                to->B = (byte)b;
+
+                from++;
+                to++;
+            }
+        }
+
+        public static unsafe void ToLab24(Byte* from, Lab24* to, int length = 1)
+        {
+            // 使用 OpenCV 中的算法实现
+
+            if (length < 1) return;
+
+            Byte* end = from + length;
+            
+            int x, y, z;
+            int l, a, b;
+            bool flag;
+
+            while (from != end)
+            {
+                Byte val = *from;
+                Byte red = val;
+                Byte green = val;
+                Byte blue = val;
+
+                x = blue * labXb + green * labXg + red * labXr;
+                y = blue * labYb + green * labYg + red * labYr;
+                z = blue * labZb + green * labZg + red * labZr;
+
+                flag = x > labT;
+
+                x = (((x) + (1 << ((lab_shift) - 1))) >> (lab_shift));
+
+                if (flag)
+                    x = icvLabCubeRootTab[x];
+                else
+                    x = (((x * labSmallScale + labSmallShift) + (1 << ((lab_shift) - 1))) >> (lab_shift));
+
+                flag = z > labT;
+                z = (((z) + (1 << ((lab_shift) - 1))) >> (lab_shift));
+
+                if (flag == true)
+                    z = icvLabCubeRootTab[z];
+                else
+                    z = (((z * labSmallScale + labSmallShift) + (1 << ((lab_shift) - 1))) >> (lab_shift));
+
+                flag = y > labT;
+                y = (((y) + (1 << ((lab_shift) - 1))) >> (lab_shift));
+
+                if (flag == true)
+                {
+                    y = icvLabCubeRootTab[y];
+                    l = (((y * labLScale - labLShift) + (1 << ((2 * lab_shift) - 1))) >> (2 * lab_shift));
+                }
+                else
+                {
+                    l = (((y * labLScale2) + (1 << ((lab_shift) - 1))) >> (lab_shift));
+                    y = (((y * labSmallScale + labSmallShift) + (1 << ((lab_shift) - 1))) >> (lab_shift));
+                }
+
+                a = (((500 * (x - y)) + (1 << ((lab_shift) - 1))) >> (lab_shift)) + 129;
+                b = (((200 * (y - z)) + (1 << ((lab_shift) - 1))) >> (lab_shift)) + 128;
+
+                l = l > 255 ? 255 : l < 0 ? 0 : l;
+                a = a > 255 ? 255 : a < 0 ? 0 : a;
+                b = b > 255 ? 255 : b < 0 ? 0 : b;
+
+                to->L = (byte)l;
+                to->A = (byte)a;
+                to->B = (byte)b;
+
+                from++;
+                to++;
+            }
+        }
+
         public static unsafe void ToRgb24(Lab24* from, Rgb24* to, int length=1)
         {
             if (length < 1) return;
@@ -178,8 +330,6 @@ namespace Orc.SmartImage
             const float coeff3 = (-128.0f);
             const float coeff4 = 1.0f;
             const float coeff5 = (-128.0f);
-
-            if (length < 1) return;
 
             Lab24* end = from + length;
             float x, y, z,l,a,b;
@@ -211,6 +361,94 @@ namespace Orc.SmartImage
                 to->Green = (byte)green;
                 to->Blue = (byte)blue;
 
+                from++;
+                to++;
+            }
+        }
+
+        public static unsafe void ToRgb24(Argb32* from, Rgb24* to, int length = 1)
+        {
+            if (length < 1) return;
+
+            Argb32* end = from + length;
+            while (from != end)
+            {
+                *to = *((Rgb24*)from);
+                from++;
+                to++;
+            }
+        }
+
+        public static unsafe void ToRgb24(byte* from, Rgb24* to, int length = 1)
+        {
+            if (length < 1) return;
+
+            Byte* end = from + length;
+            while (from != end)
+            {
+                Byte val = *from;
+                to->Blue = val;
+                to->Green = val;
+                to->Red = val;
+                from++;
+                to++;
+            }
+        }
+
+        public static unsafe void ToArgb32(Rgb24* from, Argb32* to, int length = 1)
+        {
+            if (length < 1) return;
+            
+            Rgb24* end = from + length;
+            while (from != end)
+            {
+                to->Blue = from->Blue;
+                to->Green = from->Green;
+                to->Red = from->Red;
+                to->Alpha = 255;
+                from++;
+                to++;
+            }
+        }
+
+        public static unsafe void ToByte(Rgb24* from, byte* to, int length = 1)
+        {
+            if (length < 1) return;
+
+            Rgb24* end = from + length;
+            while (from != end)
+            {
+                *to = (Byte)(from->Blue * 0.114 + from->Green * 0.587 + from->Red * 0.299);
+                from++;
+                to++;
+            }
+        }
+
+        public static unsafe void ToByte(Argb32* from, byte* to, int length = 1)
+        {
+            if (length < 1) return;
+
+            Argb32* end = from + length;
+            while (from != end)
+            {
+                *to = (Byte)(from->Blue * 0.114 + from->Green * 0.587 + from->Red * 0.299);
+                from++;
+                to++;
+            }
+        }
+
+        public static unsafe void ToArgb32(Byte* from, Argb32* to, int length = 1)
+        {
+            if (length < 1) return;
+
+            Byte* end = from + length;
+            while (from != end)
+            {
+                Byte val = *from;
+                to->Blue = val;
+                to->Green = val;
+                to->Red = val;
+                to->Alpha = 255;
                 from++;
                 to++;
             }

@@ -5,35 +5,21 @@ using System.Drawing;
 
 namespace Orc.SmartImage
 {
-    public struct ByteConverter : IByteConverter<Byte>
+    public struct ByteConverter : IColorConverter
     {
-        public unsafe void Copy(byte* from, Argb32* to)
+        public unsafe void Copy(Rgb24* from, void* to, int length)
         {
-            Byte data = *from;
-            to->Blue = data;
-            to->Green = data;
-            to->Red = data;
-            to->Alpha = 255;
+            UnmanagedImageConverter.ToByte(from, (byte*)to, length);
         }
 
-        public unsafe void Copy(Argb32* from, byte* to)
+        public unsafe void Copy(Argb32* from, void* to, int length)
         {
-            *to = (Byte)(from->Blue * 0.114 + from->Green * 0.587 + from->Red * 0.299);
+            UnmanagedImageConverter.ToByte(from, (byte*)to, length);
         }
 
-        public unsafe void Copy(Rgb24* from, byte* to)
+        public unsafe void Copy(byte* from, void* to, int length)
         {
-            *to = (Byte)(from->Blue * 0.114 + from->Green * 0.587 + from->Red * 0.299);
-        }
-
-        public unsafe void Copy(byte* from, ref byte to)
-        {
-            to = *from;
-        }
-
-        public unsafe void Copy(ref byte from, byte* to)
-        {
-            *to = from;
+            UnmanagedImageConverter.Copy(from, (byte*)to, length);
         }
     }
 
@@ -49,7 +35,7 @@ namespace Orc.SmartImage
         {
         }
 
-        protected override IByteConverter<Byte> CreateByteConverter()
+        protected override IColorConverter CreateByteConverter()
         {
             return new ByteConverter();
         }
@@ -449,6 +435,16 @@ namespace Orc.SmartImage
                 start[0] = 0;
                 start[width-1] = 0;
             }
+        }
+
+        protected override System.Drawing.Imaging.PixelFormat GetOutputBitmapPixelFormat()
+        {
+            return System.Drawing.Imaging.PixelFormat.Format8bppIndexed;
+        }
+
+        protected override unsafe void ToBitmapCore(byte* src, byte* dst, int width)
+        {
+            UnmanagedImageConverter.Copy(src, dst, width);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Orc.SmartImage
 
         public IntPtr StartIntPtr { get; private set; }
 
-        private IByteConverter<T> m_converter;
+        private IColorConverter m_converter;
         private unsafe Byte* m_start;
 
         public unsafe UnmanagedImage(Int32 width, Int32 height)
@@ -113,41 +113,28 @@ namespace Orc.SmartImage
                     break;
             }
 
-            Byte* t = (Byte*)StartIntPtr;
-
             BitmapData data = newMap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, format);
+            Byte* line = (Byte*)data.Scan0;
+            Byte* dstLine = (Byte*)StartIntPtr;
             try
             {
                 if (format == PixelFormat.Format24bppRgb)
                 {
-                    Byte* line = (Byte*)data.Scan0;
-
                     for (int h = 0; h < height; h++)
                     {
-                        Rgb24* c = (Rgb24*)line;
-                        for (int w = 0; w < width; w++)
-                        {
-                            m_converter.Copy(c, t);
-                            t += step;
-                            c++;
-                        }
+                        m_converter.Copy((Rgb24*)line, (void*)dstLine, width);
                         line += data.Stride;
+                        dstLine += step * width;
                     }
                 }
                 else
                 {
-                    Byte* line = (Byte*)data.Scan0;
-
                     for (int h = 0; h < height; h++)
                     {
-                        Argb32* c = (Argb32*)line;
-                        for (int w = 0; w < width; w++)
-                        {
-                            m_converter.Copy(c, t);
-                            t += step;
-                            c++;
-                        }
+                        m_converter.Copy((Argb32*)line, (void*)dstLine, width);
+
                         line += data.Stride;
+                        dstLine += step * width;
                     }
                 }
             }
@@ -165,14 +152,14 @@ namespace Orc.SmartImage
             }
         }
 
-        public unsafe Bitmap ToBitmap()
+        public virtual unsafe Bitmap ToBitmap()
         {
-            Bitmap map = new Bitmap(this.Width, this.Height, PixelFormat.Format32bppArgb);
+            Bitmap map = new Bitmap(this.Width, this.Height, GetOutputBitmapPixelFormat());
             ToBitmap(map);
             return map;
         }
 
-        public unsafe void ToBitmap(Bitmap map)
+        public virtual unsafe void ToBitmap(Bitmap map)
         {
             if (map == null) throw new ArgumentNullException("map");
             if (map.Width != this.Width || map.Height != this.Height)
@@ -180,32 +167,25 @@ namespace Orc.SmartImage
                 throw new ArgumentException("尺寸不匹配.");
             }
 
-            if (map.PixelFormat != PixelFormat.Format32bppArgb)
+            if (map.PixelFormat != GetOutputBitmapPixelFormat())
             {
-                throw new ArgumentException("只支持 Format32bppArgb 格式。 ");
+                throw new ArgumentException("只支持 " + GetOutputBitmapPixelFormat().ToString() + " 格式。 ");
             }
 
             Int32 step = SizeOfT();
-            Byte* t = (Byte*)StartIntPtr;
+            Byte* srcLine = (Byte*)StartIntPtr;
 
             BitmapData data = map.LockBits(new Rectangle(0, 0, map.Width, map.Height), ImageLockMode.ReadWrite, map.PixelFormat);
             try
             {
                 int width = map.Width;
                 int height = map.Height;
-
-                Byte* line = (Byte*)data.Scan0;
-
+                Byte* dstLine = (Byte*)data.Scan0;
                 for (int h = 0; h < height; h++)
                 {
-                    Argb32* c = (Argb32*)line;
-                    for (int w = 0; w < width; w++)
-                    {
-                        m_converter.Copy(t, c);
-                        t += step;
-                        c++;
-                    }
-                    line += data.Stride;
+                    ToBitmapCore(srcLine, dstLine, width);
+                    dstLine += data.Stride;
+                    srcLine += step * width;
                 }
             }
             finally
@@ -214,8 +194,12 @@ namespace Orc.SmartImage
             }
         }
 
+        protected abstract PixelFormat GetOutputBitmapPixelFormat();
+
+        protected abstract unsafe void ToBitmapCore(byte* src, byte* dst, int width);
+
         public abstract IImage Clone();
 
-        protected abstract IByteConverter<T> CreateByteConverter();
+        protected abstract IColorConverter CreateByteConverter();
     }
 }
