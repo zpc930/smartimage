@@ -194,6 +194,18 @@ namespace Orc.SmartImage
             }
         }
 
+        public void ApplyMatrix(float a, float b, float c, float d, float e, float f)
+        {
+            //TODO: ApplyMatrix
+            throw new NotImplementedException();
+        }
+
+        public void Resize(UnmanagedImage<T> dst)
+        {
+            //TODO: Resize
+            throw new NotImplementedException();
+        }
+
         protected abstract PixelFormat GetOutputBitmapPixelFormat();
 
         protected abstract unsafe void ToBitmapCore(byte* src, byte* dst, int width);
