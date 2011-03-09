@@ -91,6 +91,9 @@ namespace Orc.SmartImage
         {
             int height = map.Height;
             int width = map.Width;
+
+            const int PixelFormat32bppCMYK = 8207;
+
             PixelFormat format = map.PixelFormat;
 
             if (this.Width != width || this.Height != height)
@@ -108,8 +111,20 @@ namespace Orc.SmartImage
                 case PixelFormat.Format32bppArgb:
                     break;
                 default:
-                    format = PixelFormat.Format32bppArgb;
-                    newMap = map.Clone(new Rectangle(0, 0, width, height), PixelFormat.Format32bppArgb);
+                    if ((int)format == PixelFormat32bppCMYK)
+                    {
+                        format = PixelFormat.Format24bppRgb;
+                        newMap = new Bitmap(width, height, format);
+                        using (Graphics g = Graphics.FromImage(newMap))
+                        {
+                            g.DrawImage(map, new Point());
+                        }
+                    }
+                    else
+                    {
+                        format = PixelFormat.Format32bppArgb;
+                        newMap = map.Clone(new Rectangle(0, 0, width, height), PixelFormat.Format32bppArgb);
+                    }
                     break;
             }
 
