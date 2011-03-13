@@ -437,6 +437,58 @@ namespace Orc.SmartImage
             }
         }
 
+        /// <summary>
+        /// 进行中值滤波。
+        /// </summary>
+        /// <param name="medianRadius">
+        /// 中值滤波的核半径，不得小于1.
+        /// </param>
+        public unsafe void ApplyMedianFilter(int medianRadius)
+        {
+            if (medianRadius > 0)
+            {
+                // 进行中值滤波
+                using (ImageU8 copy = this.Clone() as ImageU8)
+                {
+                    int size = medianRadius * 2 + 1;
+                    int count = 0;
+                    byte[] data = new byte[size * size];
+                    int height = this.Height;
+                    int width = this.Width;
+                    for (int y = 0; y < height; y++)
+                    {
+                        for (int x = 0; x < width; x++)
+                        {
+                            count = 0;
+                            for (int h = -medianRadius; h <= medianRadius; h++)
+                            {
+                                for (int w = -medianRadius; w <= medianRadius; w++)
+                                {
+                                    int hh = y + h;
+                                    int ww = x + w;
+                                    if (hh >= 0 && hh < height && ww >= 0 && ww < width)
+                                    {
+                                        data[count] = copy[hh, ww];
+                                        count++;
+                                    }
+                                }
+                            }
+
+                            Array.Sort(data, 0, count);
+                            int m = count >> 1;
+                            byte median = data[m];
+                            this[y, x] = median;
+                        }
+                    }
+                }
+            }
+        }
+
+        protected override void InitPalette(Bitmap map)
+        {
+            map.InitGrayscalePalette();
+        }
+
         protected override System.Drawing.Imaging.PixelFormat GetOutputBitmapPixelFormat()
         {
             return System.Drawing.Imaging.PixelFormat.Format8bppIndexed;
