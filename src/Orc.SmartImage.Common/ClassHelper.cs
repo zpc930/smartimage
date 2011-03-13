@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Text;
 
 namespace Orc.SmartImage
@@ -97,6 +98,30 @@ namespace Orc.SmartImage
             if (angle < 0) angle = 360 + angle;
             double radius = Math.Sqrt(p.X * p.X + p.Y * p.Y);
             return new PolarPoint((int)radius, (int)angle);
+        }
+
+        public static Bitmap CloneBitmap(this Bitmap map, PixelFormat dstFormat)
+        {
+            PixelFormat format = map.PixelFormat;
+            Bitmap newMap = null;
+
+            const int PixelFormat32bppCMYK = 8207;
+            if ((int)format == PixelFormat32bppCMYK)
+            {
+                format = PixelFormat.Format24bppRgb;
+                newMap = new Bitmap(map.Width, map.Height, format);
+                using (Graphics g = Graphics.FromImage(newMap))
+                {
+                    g.DrawImage(map, new Point());
+                }
+            }
+            else
+            {
+                format = PixelFormat.Format32bppArgb;
+                newMap = map.Clone(new Rectangle(0, 0, map.Width, map.Height), dstFormat);
+            }
+
+            return newMap;
         }
     }
 }

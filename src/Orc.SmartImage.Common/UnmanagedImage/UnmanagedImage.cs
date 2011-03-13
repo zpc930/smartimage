@@ -170,8 +170,13 @@ namespace Orc.SmartImage
         public virtual unsafe Bitmap ToBitmap()
         {
             Bitmap map = new Bitmap(this.Width, this.Height, GetOutputBitmapPixelFormat());
+            InitPalette(map);
             ToBitmap(map);
             return map;
+        }
+
+        protected virtual void InitPalette(Bitmap map)
+        {
         }
 
         public virtual unsafe void ToBitmap(Bitmap map)
