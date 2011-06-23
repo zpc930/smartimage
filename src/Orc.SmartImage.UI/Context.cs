@@ -52,8 +52,8 @@ namespace Orc.SmartImage.UI
 
 		public void Save(String fullPath)
 		{
-			if (System.IO.File.Exists(DefaultPath)) System.IO.File.Delete(fullPath);
-			ObjectSerializer.SaveProtoBuf<Context>(fullPath, this);
+            //if (System.IO.File.Exists(DefaultPath)) System.IO.File.Delete(fullPath);
+            //ObjectSerializer.SaveProtoBuf<Context>(fullPath, this);
 		}
 
 		public static Context LoadDefault()
@@ -63,7 +63,8 @@ namespace Orc.SmartImage.UI
 
 		public static Context Load(String filePath)
 		{
-			return ObjectSerializer.ParseProtoBuf<Context>(filePath);
+            return null;
+            //return ObjectSerializer.ParseProtoBuf<Context>(filePath);
 		}
 	}
 
@@ -204,7 +205,7 @@ namespace Orc.SmartImage.UI
 		public void Save(String fullPath)
 		{
 			if (System.IO.File.Exists(DefaultPath)) System.IO.File.Delete(fullPath);
-			ObjectSerializer.SaveProtoBuf<HistoryContext>(fullPath, this);
+			// ObjectSerializer.SaveProtoBuf<HistoryContext>(fullPath, this);
 		}
 
 		public static HistoryContext LoadDefault()
@@ -214,7 +215,8 @@ namespace Orc.SmartImage.UI
 
 		public static HistoryContext Load(String filePath)
 		{
-			return ObjectSerializer.ParseProtoBuf<HistoryContext>(filePath);
+            return null;
+			// return ObjectSerializer.ParseProtoBuf<HistoryContext>(filePath);
 		}
 	}
 
