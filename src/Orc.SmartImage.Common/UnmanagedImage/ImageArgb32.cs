@@ -10,6 +10,12 @@ namespace Orc.SmartImage
     [StructLayout(LayoutKind.Explicit)]
     public partial struct Argb32
     {
+        public static Argb32 WHITE = new Argb32 { Red = 255, Green = 255, Blue = 255, Alpha = 255 };
+        public static Argb32 BLACK = new Argb32 { Alpha = 255 };
+        public static Argb32 RED = new Argb32 { Red = 255, Alpha = 255 };
+        public static Argb32 BLUE = new Argb32 { Blue = 255, Alpha = 255 };
+        public static Argb32 GREEN = new Argb32 { Green = 255, Alpha = 255 };
+
         [FieldOffset(0)]
         public Byte Blue;
         [FieldOffset(1)]
@@ -80,7 +86,13 @@ namespace Orc.SmartImage
         {
         }
 
-        public ImageArgb32(Bitmap map):base(map)
+        public ImageArgb32(Bitmap map)
+            :base(map)
+        {
+        }
+
+        public ImageArgb32(String path)
+            : base(path)
         {
         }
 
@@ -157,6 +169,17 @@ namespace Orc.SmartImage
         protected override unsafe void ToBitmapCore(byte* src, byte* dst, int width)
         {
             UnmanagedImageConverter.Copy(src, dst, width * 4);
+        }
+
+        public unsafe void SetAlpha(byte alpha)
+        {
+            Argb32* start = (Argb32*)this.Start;
+            Argb32* end = start + this.Length;
+            while (start != end)
+            {
+                start->Alpha = alpha;
+                start++;
+            }
         }
     }
 }

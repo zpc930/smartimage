@@ -92,7 +92,7 @@ namespace Orc.SmartImage
             {
                 {-1, -2, -1},
                 {0, 0, 0},
-                {1,2,1}
+                {1, 2, 1}
             });
 
         public static unsafe ConvolutionKernel CreateGaussianKernel(double sigma = 1.4, int size = 5)

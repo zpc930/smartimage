@@ -8,6 +8,16 @@ namespace Orc.SmartImage
 {
     public static class ClassHelper
     {
+        public static System.Drawing.Bitmap Resize(this System.Drawing.Bitmap bmp, int width, int height)
+        {
+            System.Drawing.Bitmap result = new System.Drawing.Bitmap(width, height);
+            using (System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(result))
+            {
+                g.DrawImage(bmp, 0, 0, width, height);
+            }
+            return result;
+        }
+
         public static int Area(this Rectangle rec)
         {
             return rec.Width * rec.Height;
