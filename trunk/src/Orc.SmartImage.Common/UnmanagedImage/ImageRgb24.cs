@@ -140,6 +140,11 @@ namespace Orc.SmartImage
         {
         }
 
+        public ImageRgb24(String path)
+            : base(path)
+        {
+        }
+
         protected override IColorConverter CreateByteConverter()
         {
             return new Rgb24Converter();

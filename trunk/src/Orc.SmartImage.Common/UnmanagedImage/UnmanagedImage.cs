@@ -26,6 +26,11 @@ namespace Orc.SmartImage
         {
             if (width <= 0) throw new ArgumentOutOfRangeException("width");
             else if (height <= 0) throw new ArgumentOutOfRangeException("height");
+            AllocMemory(width,height);
+        }
+
+        private unsafe void AllocMemory(int width, int height)
+        {
             Height = height;
             Width = width;
             Length = Width * Height;
@@ -36,9 +41,19 @@ namespace Orc.SmartImage
             m_start = (Byte*)StartIntPtr;
         }
 
-        public UnmanagedImage(Bitmap map):this(map.Width, map.Height)
+        public unsafe UnmanagedImage(String path)
+        {
+            using (Bitmap bmp = new Bitmap(path))
+            {
+                AllocMemory(bmp.Width, bmp.Height);
+                this.CreateFromBitmap(bmp);
+            }
+        }
+
+        public UnmanagedImage(Bitmap map)
         {
             if (map == null) throw new ArgumentNullException("map");
+            AllocMemory(map.Width, map.Height);
             this.CreateFromBitmap(map);
         }
 
@@ -87,7 +102,7 @@ namespace Orc.SmartImage
             return Marshal.SizeOf(typeof(T));
         }
 
-        private unsafe void CreateFromBitmap(Bitmap map)
+        protected virtual unsafe void CreateFromBitmap(Bitmap map)
         {
             int height = map.Height;
             int width = map.Width;
@@ -96,10 +111,8 @@ namespace Orc.SmartImage
 
             PixelFormat format = map.PixelFormat;
 
-            if (this.Width != width || this.Height != height)
-            {
-                return;
-            }
+            this.Width = width;
+            this.Height = height;
 
             Bitmap newMap = map;
             Int32 step = SizeOfT();

@@ -1,6 +1,4 @@
 ﻿using TPixel = System.Byte;
-using TCache = System.Int32;
-using TKernel = System.Int32;
 using TImage = Orc.SmartImage.ImageU8;
 
 using System;

@@ -484,6 +484,100 @@ namespace Orc.SmartImage
             }
         }
 
+        /// <summary>
+        /// 二值化
+        /// </summary>
+        /// <param name="threshold">阈值。小于此阈值的设为 lowerValue，大于此阈值的设为 upperValue</param>
+        /// <param name="lowerValue">lowerValue</param>
+        /// <param name="upperValue">upperValue</param>
+        public unsafe void ApplyThreshold(byte threshold, byte lowerValue = 0, byte upperValue = 255)
+        {
+            byte* start = this.Start;
+            byte* end = start + this.Length;
+            while (start != end)
+            {
+                if (*start < threshold)
+                    *start = lowerValue;
+                else
+                    *start = upperValue;
+
+                start++;
+            }
+        }
+
+        /// <summary>
+        /// 使用 Otsu 二值化方法进行二值化
+        /// </summary>
+        /// <param name="lowerValue">lowerValue</param>
+        /// <param name="upperValue">upperValue</param>
+        public unsafe void ApplyOtsuThreshold(byte lowerValue = 0, byte upperValue = 255)
+        {
+            // from AForge.Net 
+            int calculatedThreshold = 0;
+            int[] integerHistogram = new int[256];
+            float[] histogram = new float[256];
+            byte* start = this.Start;
+            byte* end = start + this.Length;
+            while (start != end)
+            {
+                integerHistogram[*start]++;
+                start++;
+            }
+
+            int pixelCount = this.Length;
+            float imageMean = 0;
+
+            for (int i = 0; i < 256; i++)
+            {
+                histogram[i] = (float)integerHistogram[i] / pixelCount;
+                imageMean += histogram[i] * i;
+            }
+
+            float max = float.MinValue;
+
+            // initial class probabilities
+            float class1ProbabiltyInit = 0;
+            float class2ProbabiltyInit = 1;
+
+            // initial class 1 mean value
+            float class1MeanInit = 0;
+
+            // check all thresholds
+            for (int t = 0; t < 256; t++)
+            {
+                // calculate class probabilities for the given threshold
+                float class1Probability = class1ProbabiltyInit;
+                float class2Probability = class2ProbabiltyInit;
+
+                // calculate class means for the given threshold
+                float class1Mean = class1MeanInit;
+                float class2Mean = (imageMean - (class1Mean * class1Probability)) / class2Probability;
+
+                // calculate between class variance
+                float betweenClassVariance = (float)((class1Probability) * (1.0 - class1Probability) * Math.Pow(class1Mean - class2Mean, 2));
+
+                // check if we found new threshold candidate
+                if (betweenClassVariance > max)
+                {
+                    max = betweenClassVariance;
+                    calculatedThreshold = t;
+                }
+
+                // update initial probabilities and mean value
+                class1MeanInit *= class1ProbabiltyInit;
+
+                class1ProbabiltyInit += histogram[t];
+                class2ProbabiltyInit -= histogram[t];
+
+                class1MeanInit += (float)t * (float)histogram[t];
+
+                if (class1ProbabiltyInit != 0)
+                    class1MeanInit /= class1ProbabiltyInit;
+            }
+
+            ApplyThreshold((byte)calculatedThreshold, lowerValue, upperValue);
+        }
+
         protected override void InitPalette(Bitmap map)
         {
             map.InitGrayscalePalette();
