@@ -15,6 +15,7 @@ namespace Orc.SmartImage
         public static Argb32 RED = new Argb32 { Red = 255, Alpha = 255 };
         public static Argb32 BLUE = new Argb32 { Blue = 255, Alpha = 255 };
         public static Argb32 GREEN = new Argb32 { Green = 255, Alpha = 255 };
+        public static Argb32 EMPTY = new Argb32 { };
 
         [FieldOffset(0)]
         public Byte Blue;
