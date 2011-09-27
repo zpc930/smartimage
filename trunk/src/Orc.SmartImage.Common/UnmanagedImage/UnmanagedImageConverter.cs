@@ -369,7 +369,6 @@ namespace Orc.SmartImage
         public static unsafe void ToRgb24(Argb32* from, Rgb24* to, int length = 1)
         {
             if (length < 1) return;
-
             Argb32* end = from + length;
             while (from != end)
             {

@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Orc.SmartImage</RootNamespace>
     <AssemblyName>Orc.SmartImage.Common</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -31,7 +31,8 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -84,6 +85,9 @@
       <HintPath>..\..\lib\Orc.Util.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\lib\System.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
@@ -106,6 +110,7 @@
     <Compile Include="UnmanagedImage\Channel\ImageChannelU8ClassHelper.cs" />
     <Compile Include="UnmanagedImage\Channel\ImageChannelU8ClassHelper_Csmacro.cs" />
     <Compile Include="UnmanagedImage\Channel\ImageChannel_Template.cs" />
+    <Compile Include="UnmanagedImage\Hsi.cs" />
     <Compile Include="UnmanagedImage\ImageCmyk.cs" />
     <Compile Include="UnmanagedImage\ImageGrad.cs" />
     <Compile Include="UnmanagedImage\ImageGradClassHelper.cs" />
@@ -147,6 +152,7 @@
     <Compile Include="UnmanagedImage\ImageFilter_Template.cs" />
     <Compile Include="UnmanagedImage\TPixel_Template.cs" />
     <Compile Include="UnmanagedImage\UnmanagedImage.cs" />
+    <Compile Include="Utils\InterpolateUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
